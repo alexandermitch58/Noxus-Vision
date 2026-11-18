@@ -237,14 +237,13 @@
                 </button>
             </div>
 
-            <!-- GALLERY SECTION (Gaya Baru Versi Noxus) -->
+            <!-- GALLERY SECTION -->
             <div id="gallerySection" class="hidden space-y-6">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div>
                         <h2 class="text-3xl font-bold text-white tracking-wide">Galeri Karya</h2>
                         <p class="text-xs text-gray-400 mt-1">Semua karya AI tersimpan di sesi ini.</p>
                     </div>
-                    <!-- Filter Kategori Tombol -->
                     <div class="flex space-x-1 bg-[#131b2e]/90 p-1 rounded-xl border border-gray-800">
                         <button onclick="filterGallery('all')" id="filt-all" class="px-4 py-1.5 rounded-lg text-xs font-semibold bg-purple-600 text-white transition">All</button>
                         <button onclick="filterGallery('video')" id="filt-video" class="px-4 py-1.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-white transition">Video</button>
@@ -252,7 +251,6 @@
                     </div>
                 </div>
 
-                <!-- Grid Galeri Utama -->
                 <div id="videoGalleryGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <p class="text-xs text-gray-500 italic col-span-full">Belum ada hasil render yang disimpan.</p>
                 </div>
@@ -355,7 +353,7 @@
         let uploadedImages = [];
         let allGlobalGallery = [];
         let renderedVideoGallery = [];
-        let currentGalleryFilter = 'all'; // Filter galeri: 'all', 'video', 'image'
+        let currentGalleryFilter = 'all';
         let selectedDuration = '15s';
         let selectedResolution = '1080p';
         let selectedAspect = '16:9';
@@ -721,7 +719,6 @@
             }
         }
 
-        // --- FILTER GALERI KARYA ---
         function filterGallery(type) {
             currentGalleryFilter = type;
             ['all', 'video', 'image'].forEach(t => {
@@ -739,7 +736,6 @@
             const vidGrid = document.getElementById('videoGalleryGrid');
             vidGrid.innerHTML = '';
             
-            // Filter data sesuai tombol yang dipilih
             const filteredGallery = renderedVideoGallery.filter(item => {
                 if (currentGalleryFilter === 'video') return item.type === 'video';
                 if (currentGalleryFilter === 'image') return item.type === 'image';
@@ -768,7 +764,6 @@
 
                     const isLong = item.title.length > 70;
                     card.innerHTML = `
-                        <!-- Badge Atas Gambar -->
                         <div class="absolute top-6 left-6 z-10 flex items-center gap-2">
                             <span class="bg-black/70 backdrop-blur text-amber-400 border border-amber-500/30 text-[10px] font-bold px-2.5 py-1 rounded-lg uppercase tracking-wider">NOXUS</span>
                         </div>
@@ -784,7 +779,6 @@
                             <p class="text-[11px] text-purple-400 font-medium pt-1">${item.meta}</p>
                         </div>
 
-                        <!-- Tombol Aksi Bawah -->
                         <div class="flex items-center gap-2 pt-2 border-t border-gray-800/80">
                             <button onclick="downloadGalleryItem(${originalIdx})" class="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-200 text-[11px] py-2 rounded-xl transition font-medium">📥 Download</button>
                             ${makeVideoBtn}
@@ -813,12 +807,9 @@
             }
         }
 
-        // Fungsi khusus tombol 'Jadikan Video'
         function makeVideoFromImage(idx) {
             const item = renderedVideoGallery[idx];
-            // Pindahkan gambar ke uploadedImages untuk referensi studio
             uploadedImages.push({ name: 'karya-galeri.png', url: item.url });
-            // Pindah ke tab studio dan set mode ke image-to-video
             switchTabNav('studio');
             setGeneratorMode('image-to-video');
             renderImagePreviews();
@@ -868,7 +859,7 @@
                     <td><span class="px-2 py-0.5 rounded text-[10px] font-semibold ${isBlocked ? 'bg-red-500/20 text-red-400 border border-red-500/30' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'}">${user.status || 'Active'}</span></td>
                     <td class="space-x-1">
                         <button onclick="adminEditUser(${originalIdx})" class="text-indigo-400 hover:underline text-[11px]">Edit</button>
-                        <button onclick="adminAdjustCredit(${originalIdx})" class="text-amber-400 hover:underline text-[11px]">Kredit (+/-)</button>
+                        <button onclick="adminAdjustCredit(${originalIdx})" class="text-amber-400 hover:underline text-[11px]">Kredit (Set)</button>
                         <button onclick="adminToggleBlock(${originalIdx})" class="text-orange-400 hover:underline text-[11px]">${isBlocked ? 'Unblock' : 'Block'}</button>
                         <button onclick="adminDeleteUser(${originalIdx})" class="text-red-400 hover:underline text-[11px]">Hapus</button>
                     </td>
@@ -903,12 +894,13 @@
 
         function adminAdjustCredit(idx) {
             const uObj = usersList[idx];
-            const val = prompt(`Atur jumlah kredit untuk ${uObj.email} (Tambah/Kurang):`, "160");
+            const currentCredits = uObj.credits === 'Unlimited' ? 160 : uObj.credits;
+            const val = prompt(`Atur langsung jumlah kredit baru untuk ${uObj.email}:`, currentCredits);
             if(val !== null) {
-                if(uObj.credits === 'Unlimited') {
-                    uObj.credits = parseInt(val) || 0;
+                if(val.toLowerCase() === 'unlimited') {
+                    uObj.credits = 'Unlimited';
                 } else {
-                    uObj.credits = Math.max(0, parseInt(uObj.credits) + (parseInt(val) || 0));
+                    uObj.credits = Math.max(0, parseInt(val) || 0);
                 }
                 renderAdminTable();
             }
@@ -921,7 +913,7 @@
         }
 
         function adminDeleteUser(idx) {
-            if(confirm(`Yakin ingin menghapus user ${usersList[idx].email}?`)) {
+            if(confirm(`Yakin ingin menghapus user ${usersList.email || usersList[idx].email}?`)) {
                 usersList.splice(idx, 1);
                 renderAdminTable();
             }
