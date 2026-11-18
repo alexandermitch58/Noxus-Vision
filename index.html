@@ -175,7 +175,11 @@
                             <button onclick="openGalleryModal()" type="button" class="text-xs bg-purple-600/30 hover:bg-purple-600/50 text-purple-300 border border-purple-500/40 px-3 py-1.5 rounded-lg transition">📁 Add from Gallery</button>
                         </div>
                         <div id="imagePreviewContainer" class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-3">
-                            <!-- Kotak Tambah Foto akan dirender dinamis di sini -->
+                            <!-- TOMBOL TAMBAH FOTO PERMANEN -->
+                            <div onclick="document.getElementById('hiddenFileInput').click()" class="border-2 border-dashed border-gray-700 hover:border-purple-500 bg-[#0b0f17]/40 rounded-xl p-4 text-center cursor-pointer transition flex flex-col items-center justify-center aspect-square">
+                                <div class="w-10 h-10 bg-purple-600/20 text-purple-400 rounded-full flex items-center justify-center text-xl mb-1 font-bold">+</div>
+                                <p class="text-[11px] font-medium text-gray-300">Tambah Foto</p>
+                            </div>
                         </div>
                         <input type="file" id="hiddenFileInput" multiple accept="image/*" onchange="handleImageUploads(event)" class="hidden">
                     </div>
@@ -575,31 +579,34 @@
 
         function renderImagePreviews() {
             const container = document.getElementById('imagePreviewContainer');
-            container.innerHTML = '';
-            uploadedImages.forEach((item, index) => {
-                const div = document.createElement('div');
-                div.className = "bg-[#0b0f17] border border-gray-700 rounded-xl p-2 flex flex-col items-center relative group";
-                div.innerHTML = `
-                    <div class="w-full aspect-square rounded-lg overflow-hidden mb-1.5 border border-gray-800">
-                        <img src="${item.url}" class="w-full h-full object-cover">
-                    </div>
-                    <p class="text-[11px] text-gray-200 truncate w-full text-center font-medium">${item.name}</p>
-                    <button type="button" onclick="removeImage(${index})" class="absolute top-1 right-1 bg-red-600 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center shadow">✕</button>
-                `;
-                container.appendChild(div);
-            });
-
-            // KONDISI INI YANG SEBELUMNYA TERLEWAT: Menampilkan kotak tambah foto (+)
-            if (uploadedImages.length < 10) {
-                const addBox = document.createElement('div');
-                addBox.onclick = () => document.getElementById('hiddenFileInput').click();
-                addBox.className = "border-2 border-dashed border-gray-700 hover:border-purple-500 bg-[#0b0f17]/40 rounded-xl p-4 text-center cursor-pointer transition flex flex-col items-center justify-center aspect-square";
-                addBox.innerHTML = `
+            
+            // Simpan elemen tombol tambah foto permanen
+            const addBoxHTML = `
+                <div onclick="document.getElementById('hiddenFileInput').click()" class="border-2 border-dashed border-gray-700 hover:border-purple-500 bg-[#0b0f17]/40 rounded-xl p-4 text-center cursor-pointer transition flex flex-col items-center justify-center aspect-square">
                     <div class="w-10 h-10 bg-purple-600/20 text-purple-400 rounded-full flex items-center justify-center text-xl mb-1 font-bold">+</div>
                     <p class="text-[11px] font-medium text-gray-300">Tambah Foto</p>
+                </div>
+            `;
+
+            let htmlContent = '';
+            uploadedImages.forEach((item, index) => {
+                htmlContent += `
+                    <div class="bg-[#0b0f17] border border-gray-700 rounded-xl p-2 flex flex-col items-center relative group">
+                        <div class="w-full aspect-square rounded-lg overflow-hidden mb-1.5 border border-gray-800">
+                            <img src="${item.url}" class="w-full h-full object-cover">
+                        </div>
+                        <p class="text-[11px] text-gray-200 truncate w-full text-center font-medium">${item.name}</p>
+                        <button type="button" onclick="removeImage(${index})" class="absolute top-1 right-1 bg-red-600 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center shadow">✕</button>
+                    </div>
                 `;
-                container.appendChild(addBox);
+            });
+
+            // Tampilkan tombol tambah foto jika jumlah gambar kurang dari 10
+            if (uploadedImages.length < 10) {
+                htmlContent += addBoxHTML;
             }
+
+            container.innerHTML = htmlContent;
         }
 
         function removeImage(index) {
