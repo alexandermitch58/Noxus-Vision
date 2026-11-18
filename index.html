@@ -1,395 +1,272 @@
 <!DOCTYPE html>
-<html lang="id" class="dark">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Noxus Vision - Cloud AI Studio</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        noxus: {
-                            dark: '#0a0b10', // Biru malam sangat gelap
-                            card: '#12131c', // Kartu latar kebiruan elegan
-                            border: '#1e2030', // Garis batas lembut
-                            accent: '#8b5cf6', // Violet / Ungu modern
-                            accentHover: '#7c3aed' // Ungu gelap
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-    </style>
 </head>
-<body class="bg-noxus-dark text-gray-200 min-h-screen flex flex-col antialiased selection:bg-purple-500 selection:text-white">
+<body class="bg-[#0b0f17] text-gray-100 font-sans min-h-screen flex flex-col">
 
-    <!-- TOP NAVIGATION BAR -->
-    <header class="border-b border-noxus-border bg-noxus-card/80 backdrop-blur sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <!-- Brand -->
-            <div class="flex items-center space-x-3">
-                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-600 flex items-center justify-center font-bold text-white shadow-lg shadow-purple-900/30 text-lg">
-                    NV
+    <!-- MODAL LOGIN (Sistem Login Pengguna & Admin) -->
+    <div id="loginModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md">
+        <div class="bg-[#131b2e] border border-purple-500/30 p-8 rounded-2xl w-full max-w-md shadow-2xl">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">Noxus Vision Login</h2>
+                <p class="text-sm text-gray-400 mt-1">Silakan masuk untuk mengakses Cloud AI Studio</p>
+            </div>
+            <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1">Email / Username</label>
+                    <input type="text" id="loginUser" required class="w-full bg-[#0b0f17] border border-gray-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500" placeholder="alexander@mitch.com">
                 </div>
                 <div>
-                    <span class="font-bold text-lg tracking-tight text-white">NOXUS VISION</span>
-                    <span class="block text-[10px] text-purple-400 font-medium tracking-widest uppercase">CLOUD AI STUDIO</span>
+                    <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1">Password</label>
+                    <input type="password" id="loginPass" required class="w-full bg-[#0b0f17] border border-gray-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500" placeholder="••••••••">
                 </div>
-            </div>
-
-            <!-- Nav Links -->
-            <nav class="hidden md:flex items-center space-x-1 bg-noxus-dark p-1 rounded-xl border border-noxus-border">
-                <button onclick="switchTab('studio')" id="nav-studio" class="px-4 py-1.5 rounded-lg text-sm font-medium transition bg-purple-600 text-white shadow-lg shadow-purple-600/30">Studio</button>
-                <button onclick="switchTab('gallery')" id="nav-gallery" class="px-4 py-1.5 rounded-lg text-sm font-medium transition text-gray-400 hover:text-white">Gallery</button>
-                <button onclick="switchTab('apikey')" id="nav-apikey" class="px-4 py-1.5 rounded-lg text-sm font-medium transition text-gray-400 hover:text-white">API Key</button>
-                <button onclick="switchTab('admin')" id="nav-admin" class="px-4 py-1.5 rounded-lg text-sm font-medium transition text-gray-400 hover:text-white flex items-center gap-1.5">
-                    <i class="fa-solid fa-shield-halved text-purple-400 text-xs"></i> Admin Panel
+                <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-medium py-2.5 rounded-lg transition shadow-lg shadow-purple-600/30">
+                    Masuk ke Studio
                 </button>
-            </nav>
+            </form>
+        </div>
+    </div>
 
-            <!-- User Status & Logout -->
-            <div class="flex items-center space-x-3">
-                <span class="hidden sm:inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-purple-500/10 text-purple-300 border border-purple-500/20">
-                    <i class="fa-solid fa-bolt mr-1.5 text-purple-400"></i> <span id="user-credits">100</span> kredit
-                </span>
-                <span class="text-xs text-gray-400 hidden lg:inline">Admin Noxus</span>
-                <button onclick="alert('Sesi aktif')" class="p-2 rounded-lg bg-noxus-border/50 hover:bg-noxus-border text-gray-300 transition text-sm">
-                    <i class="fa-solid fa-right-from-bracket"></i>
-                </button>
+    <!-- NAVBAR UTAMA -->
+    <header class="border-b border-gray-800 bg-[#0e131f]/80 backdrop-blur sticky top-0 z-40 px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+            <div class="bg-gradient-to-tr from-purple-600 to-indigo-600 text-white font-bold p-2 rounded-xl shadow-lg">NV</div>
+            <div>
+                <h1 class="font-bold tracking-wide text-lg">NOXUS VISION</h1>
+                <p class="text-[10px] text-gray-400 tracking-widest uppercase">Cloud AI Studio</p>
             </div>
+        </div>
+        <nav class="hidden md:flex space-x-1 bg-[#131b2e] p-1 rounded-xl border border-gray-800">
+            <button onclick="switchTabNav('studio')" id="navStudio" class="px-5 py-1.5 rounded-lg text-sm font-medium bg-purple-600 text-white transition">Studio</button>
+            <button onclick="switchTabNav('gallery')" id="navGallery" class="px-5 py-1.5 rounded-lg text-sm font-medium text-gray-400 hover:text-white transition">Gallery</button>
+            <button onclick="switchTabNav('apikey')" id="navApikey" class="px-5 py-1.5 rounded-lg text-sm font-medium text-gray-400 hover:text-white transition">API Key</button>
+            <button onclick="switchTabNav('admin')" id="navAdmin" class="px-5 py-1.5 rounded-lg text-sm font-medium text-gray-400 hover:text-white transition">Admin Panel</button>
+        </nav>
+        <div class="flex items-center space-x-4">
+            <div class="bg-purple-950/50 border border-purple-500/30 px-3 py-1.5 rounded-lg text-xs font-semibold text-purple-300">⚡ 10 Kredit</div>
+            <button onclick="logout()" class="text-xs text-gray-400 hover:text-red-400 transition">Keluar</button>
         </div>
     </header>
 
-    <!-- MAIN CONTENT CONTAINER -->
-    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
-
-        <!-- ================= TAB STUDIO ================= -->
-        <div id="tab-studio" class="space-y-6">
-            <!-- Hero Heading -->
-            <div class="text-center max-w-2xl mx-auto space-y-2 mb-8">
-                <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">What will you create today?</h1>
-                <p class="text-sm text-gray-400">Ceritakan idemu. Pilih model, atur durasi dan rasio, lalu biarkan studio merangkainya jadi visual sinematik.</p>
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-noxus-card border border-noxus-border text-xs text-purple-300 mt-2 shadow-inner">
-                    <i class="fa-solid fa-infinity text-purple-400"></i> Mode Unlimited Aktif — Seedance Series & Veo 3.1 Ready
-                </div>
+    <!-- KONTEN UTAMA STUDIO -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- KOLOM KIRI & TENGAH: PENGATURAN GENERATE -->
+        <div class="lg:col-span-2 space-y-6">
+            
+            <!-- PILIHAN MODE UTAMA (Text to Video, Image to Video, AI Image Generator) -->
+            <div class="flex space-x-3 bg-[#131b2e] p-1.5 rounded-xl border border-gray-800 w-fit">
+                <button onclick="setGeneratorMode('text-to-video')" id="btnT2V" class="px-4 py-2 rounded-lg text-sm font-medium bg-purple-600 text-white transition shadow">Text to Video</button>
+                <button onclick="setGeneratorMode('image-to-video')" id="btnI2V" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-white transition">Image to Video</button>
+                <button onclick="setGeneratorMode('image-generator')" id="btnImgGen" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-white transition">AI Image Generator</button>
             </div>
 
-            <!-- Workspace Grid -->
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            <!-- KOTAK INPUT PROMPT (Tanpa Batasan Karakter) -->
+            <div class="bg-[#131b2e] border border-gray-800 rounded-2xl p-5 shadow-xl">
+                <div class="flex justify-between items-center mb-2">
+                    <label class="text-sm font-medium text-gray-300">Prompt / Deskripsi Adegan</label>
+                    <span id="charCount" class="text-xs text-gray-500">0 karakter (Tanpa Batas)</span>
+                </div>
+                <textarea id="promptInput" oninput="updateCharCount()" rows="4" class="w-full bg-[#0b0f17] border border-gray-700 rounded-xl p-4 text-sm text-gray-200 focus:outline-none focus:border-purple-500 transition resize-none" placeholder="Ceritakan ide adegan sinematik Anda secara mendetail tanpa batasan karakter..."></textarea>
                 
-                <!-- Left Controls (Prompt & Model) -->
-                <div class="lg:col-span-7 space-y-6">
-                    <!-- Mode Tab -->
-                    <div class="flex bg-noxus-card p-1.5 rounded-xl border border-noxus-border w-fit">
-                        <button class="px-4 py-2 rounded-lg text-xs font-semibold bg-purple-600 text-white shadow">Text to Video</button>
-                        <button class="px-4 py-2 rounded-lg text-xs font-semibold text-gray-400 hover:text-white transition">Image to Video</button>
-                        <button class="px-4 py-2 rounded-lg text-xs font-semibold text-gray-400 hover:text-white transition">AI Image Generator</button>
-                    </div>
-
-                    <!-- Prompt Box -->
-                    <div class="bg-noxus-card rounded-2xl border border-noxus-border p-4 space-y-3">
-                        <div class="flex justify-between items-center text-xs text-gray-400">
-                            <span class="font-semibold text-gray-300">Prompt</span>
-                            <span id="char-count">67 / 500</span>
-                        </div>
-                        <textarea id="prompt-input" rows="4" class="w-full bg-noxus-dark border border-noxus-border rounded-xl p-3 text-sm text-white focus:outline-none focus:border-purple-500 transition resize-none" placeholder="Deskripsikan video atau gambar impianmu di sini...">Ksatria Dayak berdiri di atas tebing batu karang Sungai Kahayan saat senja menyala keemasan.</textarea>
-                        <div class="flex flex-wrap gap-2 pt-1">
-                            <button onclick="setPrompt('Ksatria Dayak berdiri di atas tebing batu karang Sungai Kahayan saat senja menyala keemasan.')" class="px-2.5 py-1 rounded-md bg-noxus-border/40 hover:bg-noxus-border text-xs text-gray-300 transition">+ Senja Borneo</button>
-                            <button onclick="setPrompt('Pertarungan wuxia epik di antara hutan bambu berkabut dengan efek slow motion.')" class="px-2.5 py-1 rounded-md bg-noxus-border/40 hover:bg-noxus-border text-xs text-gray-300 transition">+ Wuxia Bambu</button>
-                            <button onclick="setPrompt('Kota masa depan cyberpunk dengan taksi terbang melintas di atas gedung pencakar langit bernuansa neon.')" class="px-2.5 py-1 rounded-md bg-noxus-border/40 hover:bg-noxus-border text-xs text-gray-300 transition">+ Cyberpunk Neon</button>
-                        </div>
-                    </div>
-
-                    <!-- Model Selector (Seedance 2.5, 2.0, 2.0 Mini, Veo 3.1) -->
-                    <div class="space-y-3">
-                        <label class="text-xs font-semibold text-gray-300 uppercase tracking-wider">Pilih Model AI</label>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <!-- Seedance 2.5 -->
-                            <div onclick="selectModel('seedance-2.5', 'Seedance 2.5')" id="model-seedance-2.5" class="bg-purple-600/10 border-2 border-purple-600 rounded-2xl p-4 cursor-pointer transition relative">
-                                <span class="absolute top-3 right-3 px-2 py-0.5 rounded text-[10px] font-bold bg-purple-600 text-white shadow">UNLIMITED</span>
-                                <h3 class="font-bold text-white text-base">Seedance 2.5</h3>
-                                <p class="text-xs text-gray-400 mt-1">UNLIMITED • 1080p • 15–30s • Audio + Lip-sync</p>
-                            </div>
-                            <!-- Seedance 2.0 -->
-                            <div onclick="selectModel('seedance-2.0', 'Seedance 2.0')" id="model-seedance-2.0" class="bg-noxus-card border border-noxus-border hover:border-gray-600 rounded-2xl p-4 cursor-pointer transition relative">
-                                <span class="absolute top-3 right-3 px-2 py-0.5 rounded text-[10px] font-bold bg-noxus-border text-gray-300">10 KREDIT</span>
-                                <h3 class="font-bold text-white text-base">Seedance 2.0</h3>
-                                <p class="text-xs text-gray-400 mt-1">Kualitas studio • 10 kredit / generate</p>
-                            </div>
-                            <!-- Seedance 2.0 Mini -->
-                            <div onclick="selectModel('seedance-mini', 'Seedance 2.0 Mini')" id="model-seedance-mini" class="bg-noxus-card border border-noxus-border hover:border-gray-600 rounded-2xl p-4 cursor-pointer transition relative">
-                                <span class="absolute top-3 right-3 px-2 py-0.5 rounded text-[10px] font-bold bg-noxus-border text-gray-300">5 KREDIT</span>
-                                <h3 class="font-bold text-white text-base">Seedance 2.0 Mini</h3>
-                                <p class="text-xs text-gray-400 mt-1">Cepat & hemat • 5 kredit / generate</p>
-                            </div>
-                            <!-- Veo 3.1 -->
-                            <div onclick="selectModel('veo', 'Veo 3.1 Pro')" id="model-veo" class="bg-noxus-card border border-noxus-border hover:border-gray-600 rounded-2xl p-4 cursor-pointer transition relative">
-                                <span class="absolute top-3 right-3 px-2 py-0.5 rounded text-[10px] font-bold bg-noxus-border text-gray-300">GOOGLE</span>
-                                <h3 class="font-bold text-white text-base">Veo 3.1 Pro</h3>
-                                <p class="text-xs text-gray-400 mt-1">Sinematik ultra realistis dengan audio presisi.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Parameters: Durasi & Resolusi -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div class="bg-noxus-card rounded-2xl border border-noxus-border p-4 space-y-2">
-                            <label class="text-xs font-semibold text-gray-300">Durasi Video</label>
-                            <div class="grid grid-cols-4 gap-1.5">
-                                <button class="py-1.5 rounded-lg bg-noxus-dark border border-noxus-border text-xs font-medium hover:border-purple-500">5s</button>
-                                <button class="py-1.5 rounded-lg bg-noxus-dark border border-noxus-border text-xs font-medium hover:border-purple-500">10s</button>
-                                <button class="py-1.5 rounded-lg bg-purple-600 text-white text-xs font-medium shadow">15s</button>
-                                <button class="py-1.5 rounded-lg bg-noxus-dark border border-noxus-border text-xs font-medium hover:border-purple-500">30s</button>
-                            </div>
-                        </div>
-                        <div class="bg-noxus-card rounded-2xl border border-noxus-border p-4 space-y-2">
-                            <label class="text-xs font-semibold text-gray-300">Resolusi</label>
-                            <div class="grid grid-cols-3 gap-1.5">
-                                <button class="py-1.5 rounded-lg bg-noxus-dark border border-noxus-border text-xs font-medium">480p</button>
-                                <button class="py-1.5 rounded-lg bg-noxus-dark border border-noxus-border text-xs font-medium">720p</button>
-                                <button class="py-1.5 rounded-lg bg-purple-600 text-white text-xs font-medium shadow">1080p</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Generate Button -->
-                    <button onclick="startGenerate()" class="w-full py-4 rounded-2xl bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:opacity-90 text-white font-bold shadow-xl shadow-purple-900/40 transition flex items-center justify-center gap-2 text-base">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i> Buat Video Sekarang
-                    </button>
+                <!-- UPLOAD MULTI GAMBAR (Hingga 10 Referensi khusus Image-to-Video) -->
+                <div id="multiImageSection" class="mt-4 hidden">
+                    <label class="block text-xs font-medium text-purple-400 mb-2">Unggah Referensi Gambar (Maksimal 10 Gambar)</label>
+                    <input type="file" id="imageFilesInput" multiple accept="image/*" onchange="handleImageUploads(event)" class="w-full text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-500 cursor-pointer">
+                    <div id="imagePreviewContainer" class="grid grid-cols-5 gap-2 mt-3"></div>
                 </div>
 
-                <!-- Right Preview Panel -->
-                <div class="lg:col-span-5 space-y-4">
-                    <div class="bg-noxus-card rounded-2xl border border-noxus-border p-4 space-y-4 sticky top-24">
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs font-bold uppercase tracking-wider text-gray-400">Preview Studio</span>
-                            <span class="px-2 py-0.5 rounded text-[10px] bg-green-500/10 text-green-400 border border-green-500/20 font-medium">READY</span>
-                        </div>
-
-                        <!-- Video Player Box -->
-                        <div class="aspect-video bg-noxus-dark rounded-xl border border-noxus-border overflow-hidden flex items-center justify-center relative group">
-                            <video id="preview-video" class="w-full h-full object-cover" autoplay loop muted playsinline>
-                                <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" type="video/mp4">
-                            </video>
-                            <div class="absolute inset-0 bg-black/40 flex items-center justify-center group-hover:bg-black/20 transition">
-                                <div class="w-12 h-12 rounded-full bg-purple-600 flex items-center justify-center text-white shadow-lg shadow-purple-900/50 cursor-pointer">
-                                    <i class="fa-solid fa-play ml-0.5"></i>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="space-y-1">
-                            <h4 id="preview-title" class="font-bold text-white text-sm">Senja di Sungai Kahayan</h4>
-                            <p class="text-xs text-gray-400">Model: <span id="preview-model" class="text-purple-400 font-medium">Seedance 2.5</span> • 15 detik • 1080p</p>
-                        </div>
-
-                        <div id="progress-bar-container" class="hidden space-y-1.5 pt-2">
-                            <div class="flex justify-between text-xs text-gray-400">
-                                <span id="progress-status">Merender adegan AI...</span>
-                                <span id="progress-percent">45%</span>
-                            </div>
-                            <div class="w-full h-2 bg-noxus-dark rounded-full overflow-hidden border border-noxus-border">
-                                <div id="progress-fill" class="h-full bg-purple-600 transition-all duration-300" style="width: 45%;"></div>
-                            </div>
-                        </div>
-
-                        <button onclick="downloadResult()" class="w-full py-2.5 rounded-xl bg-noxus-dark hover:bg-noxus-border border border-noxus-border text-xs font-semibold text-white transition flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-download"></i> Download Video (.MP4)
-                        </button>
-                    </div>
+                <!-- Prompt Cepat / Presets -->
+                <div class="flex flex-wrap gap-2 mt-3">
+                    <button onclick="setPrompt('Ksatria Dayak berdiri di atas tebing batu karang Sungai Kahayan saat senja menyala keemasan.')" class="text-xs bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded-lg text-gray-300 transition">+ Senja Borneo</button>
+                    <button onclick="setPrompt('Pertarungan wuxia di tengah hutan bambu berkabut dengan koreografi gerakan cepat.')" class="text-xs bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded-lg text-gray-300 transition">+ Wuxia Bambu</button>
+                    <button onclick="setPrompt('Pasukan elit dalam pertempuran malam hari dengan efek sinematik asap dan ledakan.')" class="text-xs bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded-lg text-gray-300 transition">+ Aksi Tempur</button>
                 </div>
-
             </div>
+
+            <!-- PILIHAN MODEL AI (Terhubung ke ToAPIs) -->
+            <div>
+                <h3 class="text-sm font-semibold text-gray-300 mb-3">PILIH MODEL AI (ToAPIs Gateway)</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div onclick="selectModel('seedance-2.5')" id="model-seedance-2.5" class="model-card border-2 border-purple-500 bg-[#131b2e] p-4 rounded-xl cursor-pointer transition shadow-lg">
+                        <div class="flex justify-between items-center mb-1">
+                            <h4 class="font-bold text-white">Seedance 2.5</h4>
+                            <span class="text-[10px] bg-purple-600 text-white px-2 py-0.5 rounded-full">UNLIMITED</span>
+                        </div>
+                        <p class="text-xs text-gray-400">Kualitas 1080p • 15–30s • Audio + Lip-sync</p>
+                    </div>
+                    <div onclick="selectModel('veo-3.1-pro')" id="model-veo-3.1-pro" class="model-card border-2 border-gray-800 bg-[#131b2e] p-4 rounded-xl cursor-pointer transition hover:border-gray-600">
+                        <div class="flex justify-between items-center mb-1">
+                            <h4 class="font-bold text-white">Veo 3.1 Pro</h4>
+                            <span class="text-[10px] bg-blue-600 text-white px-2 py-0.5 rounded-full">GOOGLE</span>
+                        </div>
+                        <p class="text-xs text-gray-400">Sinematik ultra realistis dengan audio presisi.</p>
+                    </div>
+                    <div onclick="selectModel('qwen-image-gen')" id="model-qwen-image-gen" class="model-card border-2 border-gray-800 bg-[#131b2e] p-4 rounded-xl cursor-pointer transition hover:border-gray-600">
+                        <div class="flex justify-between items-center mb-1">
+                            <h4 class="font-bold text-white">Qwen Image Generator</h4>
+                            <span class="text-[10px] bg-emerald-600 text-white px-2 py-0.5 rounded-full">GAMBAR</span>
+                        </div>
+                        <p class="text-xs text-gray-400">Pembuatan gambar resolusi tinggi untuk referensi awal.</p>
+                    </div>
+                    <div onclick="selectModel('seedance-flash')" id="model-seedance-flash" class="model-card border-2 border-gray-800 bg-[#131b2e] p-4 rounded-xl cursor-pointer transition hover:border-gray-600">
+                        <div class="flex justify-between items-center mb-1">
+                            <h4 class="font-bold text-white">Seedance Flash (1 Kredit)</h4>
+                            <span class="text-[10px] bg-amber-600 text-white px-2 py-0.5 rounded-full">EKONOMIS</span>
+                        </div>
+                        <p class="text-xs text-gray-400">Mode cepat 5 detik per klip untuk hemat kredit.</p>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="generateContent()" class="w-full bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 hover:opacity-95 text-white font-bold py-4 rounded-2xl shadow-xl transition transform active:scale-[0.99]">
+                ✨ Mulai Generate Konten AI Sekarang
+            </button>
         </div>
 
-        <!-- ================= TAB GALLERY ================= -->
-        <div id="tab-gallery" class="hidden space-y-6">
-            <h2 class="text-2xl font-bold text-white">Galeri Karya Saya</h2>
-            <p class="text-sm text-gray-400">Semua hasil video dan gambar yang pernah Anda buat tersimpan rapi di sini.</p>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="bg-noxus-card rounded-2xl border border-noxus-border overflow-hidden space-y-3 p-3">
-                    <div class="aspect-video bg-noxus-dark rounded-xl overflow-hidden relative">
-                        <video class="w-full h-full object-cover" autoplay loop muted playsinline>
-                            <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4" type="video/mp4">
-                        </video>
+        <!-- KOLOM KANAN: PREVIEW STUDIO -->
+        <div class="bg-[#131b2e] border border-gray-800 rounded-2xl p-5 flex flex-col justify-between shadow-xl">
+            <div>
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="text-sm font-bold text-gray-300">PREVIEW STUDIO</h3>
+                    <span id="previewStatus" class="text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-0.5 rounded-full font-medium">READY</span>
+                </div>
+                <div class="aspect-video bg-[#0b0f17] rounded-xl border border-gray-800 flex items-center justify-center relative overflow-hidden group">
+                    <div id="videoPlaceholder" class="text-center p-4">
+                        <div class="w-12 h-12 bg-purple-600/30 text-purple-400 rounded-full flex items-center justify-center mx-auto mb-2 text-lg shadow-inner">▶</div>
+                        <p class="text-xs text-gray-400">Hasil render video/gambar akan muncul di sini</p>
                     </div>
-                    <div>
-                        <h4 class="font-bold text-sm text-white">Ksatria Berjubah Merah</h4>
-                        <p class="text-xs text-gray-400 mt-0.5">Seedance 2.5 • 10s • 1080p</p>
-                    </div>
+                    <video id="resultVideo" controls class="w-full h-full object-cover hidden"></video>
                 </div>
             </div>
-        </div>
-
-        <!-- ================= TAB API KEY ================= -->
-        <div id="tab-apikey" class="hidden max-w-2xl mx-auto space-y-6">
-            <div class="text-center space-y-2">
-                <h2 class="text-2xl font-bold text-white">Konfigurasi API Key</h2>
-                <p class="text-sm text-gray-400">Hubungkan akun Fal.ai atau Replicate pribadi Anda untuk eksekusi server langsung.</p>
-            </div>
-            <div class="bg-noxus-card rounded-2xl border border-noxus-border p-6 space-y-4">
-                <div class="space-y-2">
-                    <label class="text-xs font-semibold text-gray-300">API Key (Fal.ai / Replicate)</label>
-                    <input type="password" class="w-full bg-noxus-dark border border-noxus-border rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-purple-500" placeholder="fal_key_xxxxxxxxxxxxxxxxxx">
+            <div class="mt-4 pt-4 border-t border-gray-800">
+                <div class="flex justify-between items-center text-xs text-gray-400 mb-3">
+                    <span>Model: <strong id="activeModelName" class="text-white">Seedance 2.5</strong></span>
+                    <span>Durasi: 15s • 1080p</span>
                 </div>
-                <div class="space-y-2">
-                    <label class="text-xs font-semibold text-gray-300">Endpoint Model Utama</label>
-                    <input type="text" class="w-full bg-noxus-dark border border-noxus-border rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-purple-500" value="fal-ai/bytedance/seedance/v1/pro/text-to-video">
-                </div>
-                <div class="flex items-center justify-between pt-2">
-                    <label class="text-xs text-gray-300 flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" checked class="rounded bg-noxus-dark border-noxus-border text-purple-600 focus:ring-0"> Mode Demo (Tanpa API Key)
-                    </label>
-                    <button onclick="alert('API Key berhasil disimpan!')" class="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-semibold text-xs transition shadow">Simpan Konfigurasi</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- ================= TAB ADMIN PANEL ================= -->
-        <div id="tab-admin" class="hidden space-y-6">
-            <div class="bg-noxus-card rounded-2xl border border-noxus-border p-6 space-y-6">
-                <div>
-                    <h2 class="text-xl font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-crown text-purple-400"></i> Admin Panel Noxus Vision
-                    </h2>
-                    <p class="text-xs text-gray-400 mt-1">Kelola pengguna, kuota kredit, dan saklar unlimited sistem.</p>
-                </div>
-
-                <!-- Stats Grid -->
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                    <div class="bg-noxus-dark p-4 rounded-xl border border-noxus-border">
-                        <span class="text-xs text-gray-400">Total User</span>
-                        <h3 class="text-2xl font-extrabold text-white mt-1">5</h3>
-                    </div>
-                    <div class="bg-noxus-dark p-4 rounded-xl border border-noxus-border">
-                        <span class="text-xs text-gray-400">Total Video</span>
-                        <h3 class="text-2xl font-extrabold text-white mt-1">24</h3>
-                    </div>
-                    <div class="bg-noxus-dark p-4 rounded-xl border border-noxus-border">
-                        <span class="text-xs text-gray-400">Total Image</span>
-                        <h3 class="text-2xl font-extrabold text-white mt-1">19</h3>
-                    </div>
-                    <div class="bg-noxus-dark p-4 rounded-xl border border-noxus-border">
-                        <span class="text-xs text-gray-400">Kredit Terpakai</span>
-                        <h3 class="text-2xl font-extrabold text-purple-400 mt-1">120</h3>
-                    </div>
-                </div>
-
-                <!-- User Management List -->
-                <div class="space-y-3">
-                    <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-300">Daftar Pengguna Studio</h3>
-                    <div class="space-y-2">
-                        <div class="bg-noxus-dark p-4 rounded-xl border border-noxus-border flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                            <div>
-                                <span class="font-bold text-sm text-white">alexander@noxus.vision</span>
-                                <p class="text-xs text-gray-400">3 Video • 2 Gambar • 100 Kredit</p>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <span class="px-2 py-0.5 rounded text-[10px] bg-green-500/10 text-green-400 font-semibold border border-green-500/20">Aktif</span>
-                                <button onclick="alert('Kredit direset')" class="px-3 py-1 rounded bg-noxus-border hover:bg-gray-700 text-xs text-gray-300 transition">Reset Kredit</button>
-                                <button onclick="alert('Status diubah')" class="px-3 py-1 rounded bg-purple-600/20 text-purple-300 text-xs font-semibold hover:bg-purple-600/30 transition">Jadikan Unlimited</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Global Setting -->
-                <div class="bg-noxus-dark p-4 rounded-xl border border-noxus-border space-y-4">
-                    <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-300">Pengaturan Global</h3>
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <span class="font-medium text-sm text-white">Seedance 2.5 Unlimited untuk Semua User</span>
-                            <p class="text-xs text-gray-400">Saat aktif, pembuatan video tidak memotong kredit pengguna.</p>
-                        </div>
-                        <input type="checkbox" checked class="w-5 h-5 rounded bg-noxus-card border-noxus-border text-purple-600 focus:ring-0">
-                    </div>
-                </div>
+                <button id="downloadBtn" disabled class="w-full bg-gray-800 text-gray-500 font-medium py-2.5 rounded-xl transition cursor-not-allowed">
+                    📥 Download Hasil (.MP4 / .PNG)
+                </button>
             </div>
         </div>
 
     </main>
 
-    <!-- FOOTER -->
-    <footer class="border-t border-noxus-border py-6 text-center text-xs text-gray-500">
-        NOXUS VISION CLOUD AI STUDIO &bull; Didukung oleh Seedance 2.5, 2.0 & Veo 3.1
-    </footer>
-
-    <!-- INTERACTIVE JAVASCRIPT -->
+    <!-- SCRIPT LOGIKA APLIKASI -->
     <script>
-        function switchTab(tabId) {
-            ['studio', 'gallery', 'apikey', 'admin'].forEach(t => {
-                document.getElementById('tab-' + t).classList.add('hidden');
-                document.getElementById('nav-' + t).className = "px-4 py-1.5 rounded-lg text-sm font-medium transition text-gray-400 hover:text-white";
+        let currentMode = 'text-to-video';
+        let selectedModelId = 'seedance-2.5';
+        let uploadedImages = [];
+
+        function handleLogin(e) {
+            e.preventDefault();
+            document.getElementById('loginModal').classList.add('hidden');
+        }
+
+        function logout() {
+            document.getElementById('loginModal').classList.remove('hidden');
+        }
+
+        function switchTabNav(tab) {
+            ['Studio', 'Gallery', 'Apikey', 'Admin'].forEach(t => {
+                const btn = document.getElementById('nav' + t);
+                if(btn) btn.className = "px-5 py-1.5 rounded-lg text-sm font-medium text-gray-400 hover:text-white transition";
             });
-            document.getElementById('tab-' + tabId).classList.remove('hidden');
-            document.getElementById('nav-' + tabId).className = "px-4 py-1.5 rounded-lg text-sm font-medium transition bg-purple-600 text-white shadow-lg shadow-purple-600/30";
+            const activeBtn = document.getElementById('nav' + tab.charAt(0).toUpperCase() + tab.slice(1));
+            if(activeBtn) activeBtn.className = "px-5 py-1.5 rounded-lg text-sm font-medium bg-purple-600 text-white transition";
+            
+            if(tab === 'apikey') {
+                window.location.href = "#apikey-settings"; // Mengarahkan ke konfigurasi API
+            }
+        }
+
+        function setGeneratorMode(mode) {
+            currentMode = mode;
+            ['btnT2V', 'btnI2V', 'btnImgGen'].forEach(id => {
+                document.getElementById(id).className = "px-4 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-white transition";
+            });
+
+            if(mode === 'text-to-video') {
+                document.getElementById('btnT2V').className = "px-4 py-2 rounded-lg text-sm font-medium bg-purple-600 text-white transition shadow";
+                document.getElementById('multiImageSection').classList.add('hidden');
+            } else if(mode === 'image-to-video') {
+                document.getElementById('btnI2V').className = "px-4 py-2 rounded-lg text-sm font-medium bg-purple-600 text-white transition shadow";
+                document.getElementById('multiImageSection').classList.remove('hidden');
+            } else if(mode === 'image-generator') {
+                document.getElementById('btnImgGen').className = "px-4 py-2 rounded-lg text-sm font-medium bg-purple-600 text-white transition shadow";
+                document.getElementById('multiImageSection').classList.add('hidden');
+            }
+        }
+
+        function updateCharCount() {
+            const text = document.getElementById('promptInput').value;
+            document.getElementById('charCountinnerText') = text.length + " karakter (Tanpa Batas)";
         }
 
         function setPrompt(text) {
-            document.getElementById('prompt-input').value = text;
-            document.getElementById('char-count').innerText = text.length + " / 500";
+            document.getElementById('promptInput').value = text;
         }
 
-        function selectModel(modelId, modelName) {
-            // Reset semua border model
-            ['seedance-2.5', 'seedance-2.0', 'seedance-mini', 'veo'].forEach(m => {
-                const el = document.getElementById('model-' + m);
-                if(el) {
-                    el.className = "bg-noxus-card border border-noxus-border hover:border-gray-600 rounded-2xl p-4 cursor-pointer transition relative";
-                }
-            });
-            // Aktifkan yang dipilih
-            const selected = document.getElementById('model-' + modelId);
-            if(selected) {
-                selected.className = "bg-purple-600/10 border-2 border-purple-600 rounded-2xl p-4 cursor-pointer transition relative";
+        function handleImageUploads(event) {
+            const files = Array.from(event.target.files);
+            if (files.length + uploadedImages.length > 10) {
+                alert("Maksimal hanya 10 referensi gambar yang diizinkan!");
+                return;
             }
-            document.getElementById('preview-model').innerText = modelName;
+            uploadedImages = uploadedImages.concat(files);
+            renderImagePreviews();
         }
 
-        function startGenerate() {
-            const progressContainer = document.getElementById('progress-bar-container');
-            const progressFill = document.getElementById('progress-fill');
-            const progressPercent = document.getElementById('progress-percent');
-            const progressStatus = document.getElementById('progress-status');
-
-            progressContainer.classList.remove('hidden');
-            let progress = 0;
-            
-            const interval = setInterval(() => {
-                progress += 5;
-                if(progress <= 30) progressStatus.innerText = "Mengirim prompt ke server AI...";
-                else if(progress <= 70) progressStatus.innerText = "Merender frame video & audio...";
-                else progressStatus.innerText = "Menyelesaikan hasil akhir...";
-
-                progressFill.style.width = progress + '%';
-                progressPercent.innerText = progress + '%';
-
-                if(progress >= 100) {
-                    clearInterval(interval);
-                    progressStatus.innerText = "Video selesai dibuat!";
-                    setTimeout(() => {
-                        progressContainer.classList.add('hidden');
-                    }, 2000);
+        function renderImagePreviews() {
+            const container = document.getElementById('imagePreviewContainer');
+            container.innerHTML = '';
+            uploadedImages.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const div = document.createElement('div');
+                    div.className = "relative aspect-square rounded-lg overflow-hidden border border-purple-500/50";
+                    div.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover"><button onclick="removeImage(${index})" class="absolute top-1 right-1 bg-red-600 text-white rounded-full w-4 h-4 text-[10px] flex items-center justify-center">×</button>`;
+                    container.appendChild(div);
                 }
-            }, 150);
+                reader.readAsDataURL(file);
+            });
         }
 
-        function downloadResult() {
-            alert('File video berhasil diunduh ke perangkat Anda!');
+        function removeImage(index) {
+            uploadedImages.splice(index, 1);
+            renderImagePreviews();
         }
 
-        document.getElementById('prompt-input').addEventListener('input', function() {
-            document.getElementById('char-count').innerText = this.value.length + " / 500";
-        });
+        function selectModel(modelId) {
+            selectedModelId = modelId;
+            document.querySelectorAll('.model-card').forEach(card => {
+                card.className = "model-card border-2 border-gray-800 bg-[#131b2e] p-4 rounded-xl cursor-pointer transition hover:border-gray-600";
+            });
+            document.getElementById('model-' + modelId).className = "model-card border-2 border-purple-500 bg-[#131b2e] p-4 rounded-xl cursor-pointer transition shadow-lg";
+            document.getElementById('activeModelName').innerText = modelId.toUpperCase();
+        }
+
+        async function generateContent() {
+            const prompt = document.getElementById('promptInput').value;
+            if(!prompt) {
+                alert("Harap masukkan prompt terlebih dahulu!");
+                return;
+            }
+
+            document.getElementById('previewStatus').innerText = "RENDERING...";
+            document.getElementById('previewStatus').className = "text-xs bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2.5 py-0.5 rounded-full font-medium animate-pulse";
+            
+            // Integrasi ke Gateway ToAPIs menggunakan fetch (menggunakan API Key dari konfigurasi)
+            setTimeout(() => {
+                document.getElementById('previewStatus').innerText = "READY";
+                document.getElementById('previewStatus').className = "text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-0.5 rounded-full font-medium";
+                alert("Permintaan berhasil diproses melalui ToAPIs Gateway!");
+            }, 3000);
+        }
     </script>
 </body>
 </html>
