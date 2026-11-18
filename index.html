@@ -175,10 +175,7 @@
                             <button onclick="openGalleryModal()" type="button" class="text-xs bg-purple-600/30 hover:bg-purple-600/50 text-purple-300 border border-purple-500/40 px-3 py-1.5 rounded-lg transition">📁 Add from Gallery</button>
                         </div>
                         <div id="imagePreviewContainer" class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-3">
-                            <div onclick="document.getElementById('hiddenFileInput').click()" class="border-2 border-dashed border-gray-700 hover:border-purple-500 bg-[#0b0f17]/50 rounded-xl p-4 text-center cursor-pointer transition flex flex-col items-center justify-center aspect-square">
-                                <div class="w-10 h-10 bg-purple-600/20 text-purple-400 rounded-full flex items-center justify-center text-xl mb-1 font-bold">+</div>
-                                <p class="text-[11px] font-medium text-gray-300">Tambah Foto</p>
-                            </div>
+                            <!-- Kotak Tambah Foto akan dirender dinamis di sini -->
                         </div>
                         <input type="file" id="hiddenFileInput" multiple accept="image/*" onchange="handleImageUploads(event)" class="hidden">
                     </div>
@@ -278,7 +275,6 @@
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <h2 class="text-xl font-bold text-white">Admin Panel - Kelola Pengguna</h2>
                     <div class="flex items-center space-x-3 w-full sm:w-auto">
-                        <!-- Tombol Pencarian User -->
                         <input type="text" id="searchUserInput" oninput="renderAdminTable()" placeholder="🔍 Cari email/username..." class="bg-[#0b0f17] border border-gray-700 rounded-xl px-3.5 py-2 text-xs text-gray-200 focus:outline-none focus:border-purple-500 w-full sm:w-60">
                         <button onclick="openAddUserModal()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow transition whitespace-nowrap">➕ Tambah Pengguna</button>
                     </div>
@@ -592,6 +588,18 @@
                 `;
                 container.appendChild(div);
             });
+
+            // KONDISI INI YANG SEBELUMNYA TERLEWAT: Menampilkan kotak tambah foto (+)
+            if (uploadedImages.length < 10) {
+                const addBox = document.createElement('div');
+                addBox.onclick = () => document.getElementById('hiddenFileInput').click();
+                addBox.className = "border-2 border-dashed border-gray-700 hover:border-purple-500 bg-[#0b0f17]/40 rounded-xl p-4 text-center cursor-pointer transition flex flex-col items-center justify-center aspect-square";
+                addBox.innerHTML = `
+                    <div class="w-10 h-10 bg-purple-600/20 text-purple-400 rounded-full flex items-center justify-center text-xl mb-1 font-bold">+</div>
+                    <p class="text-[11px] font-medium text-gray-300">Tambah Foto</p>
+                `;
+                container.appendChild(addBox);
+            }
         }
 
         function removeImage(index) {
@@ -827,7 +835,6 @@
         }
 
         function adminAdjustCredit(idx) {
-            const u = usersList.idx; // fixed syntax below
             const uObj = usersList[idx];
             const val = prompt(`Atur jumlah kredit untuk ${uObj.email} (Tambah/Kurang):`, "160");
             if(val !== null) {
