@@ -42,7 +42,7 @@
                 <button onclick="closeGalleryModal()" class="text-gray-400 hover:text-white text-lg font-bold">✕</button>
             </div>
             <div id="galleryModalGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-4 overflow-y-auto flex-1 p-2">
-                <!-- Daftar foto riwayat upload akan muncul di sini secara dinamis -->
+                <!-- Daftar foto riwayat upload akan muncul di sini -->
             </div>
             <div class="mt-4 pt-3 border-t border-gray-800 text-right">
                 <button onclick="closeGalleryModal()" class="bg-gray-800 text-gray-300 px-4 py-2 rounded-lg text-xs font-medium">Tutup</button>
@@ -90,7 +90,7 @@
                 </div>
                 <textarea id="promptInput" oninput="updateCharCount()" rows="4" class="w-full bg-[#0b0f17] border border-gray-700 rounded-xl p-4 text-sm text-gray-200 focus:outline-none focus:border-purple-500 transition resize-none" placeholder="Ceritakan ide adegan sinematik Anda secara mendetail..."></textarea>
                 
-                <!-- UPLOAD GAMBAR REFERENSI (Digunakan untuk Image-to-Video & AI Image Generator) -->
+                <!-- UPLOAD GAMBAR REFERENSI -->
                 <div id="multiImageSection" class="space-y-3">
                     <div class="flex justify-between items-center">
                         <label class="text-xs font-medium text-purple-400">Foto Referensi (Hingga 10 Gambar)</label>
@@ -105,7 +105,7 @@
                     </div>
                     <input type="file" id="hiddenFileInput" multiple accept="image/*" onchange="handleImageUploads(event)" class="hidden">
                     
-                    <!-- Preview Daftar Gambar dengan Pratinjau & Nama File Asli di Bawahnya -->
+                    <!-- Preview Daftar Gambar dengan Nama File di Bawahnya -->
                     <div id="imagePreviewContainer" class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-3"></div>
                 </div>
 
@@ -147,7 +147,7 @@
                 </div>
             </div>
 
-            <!-- PILIHAN MODEL AI (Tanpa Tulisan ToAPIs Gateway) -->
+            <!-- PILIHAN MODEL AI -->
             <div>
                 <h3 class="text-sm font-semibold text-gray-300 mb-3">PILIH MODEL AI</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -179,11 +179,31 @@
             </button>
         </div>
 
-        <!-- BAGIAN GALLERY SECTION -->
-        <div id="gallerySection" class="lg:col-span-2 hidden space-y-4">
-            <h2 class="text-xl font-bold text-white">Galeri Hasil Render</h2>
-            <div id="galleryGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                <p class="text-xs text-gray-400">Belum ada video atau gambar tersimpan.</p>
+        <!-- BAGIAN GALLERY SECTION (DIPISAH & DILENGKAPI TOMBOL HAPUS) -->
+        <div id="gallerySection" class="lg:col-span-2 hidden space-y-6">
+            <h2 class="text-xl font-bold text-white tracking-wide">Galeri Anda</h2>
+
+            <!-- KATEGORI 1: VIDEO HASIL RENDER -->
+            <div class="space-y-3">
+                <div class="flex items-center space-x-2 border-b border-gray-800 pb-2">
+                    <span class="text-sm font-semibold text-purple-400">🎬 Video Hasil Render AI</span>
+                </div>
+                <div id="videoGalleryGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <p class="text-xs text-gray-500 italic">Belum ada video yang dirender.</p>
+                </div>
+            </div>
+
+            <!-- PEMBATAS -->
+            <div class="border-t border-gray-800 my-6"></div>
+
+            <!-- KATEGORI 2: FOTO REFERENSI YANG DIUNGGAH -->
+            <div class="space-y-3">
+                <div class="flex items-center space-x-2 border-b border-gray-800 pb-2">
+                    <span class="text-sm font-semibold text-indigo-400">📁 Foto Referensi Tersimpan</span>
+                </div>
+                <div id="photoGalleryGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                    <p class="text-xs text-gray-500 italic">Belum ada foto referensi yang diunggah.</p>
+                </div>
             </div>
         </div>
 
@@ -264,7 +284,8 @@
     <!-- SCRIPT JAVASCRIPT -->
     <script>
         let uploadedImages = [];
-        let allGlobalGallery = []; // Menyimpan semua riwayat foto yang pernah diunggah
+        let allGlobalGallery = []; // Menyimpan riwayat foto
+        let renderedVideoGallery = []; // Menyimpan riwayat video hasil render
         let selectedDuration = '15s';
         let selectedResolution = '1080p';
         let selectedAspect = '16:9';
@@ -299,6 +320,10 @@
             document.getElementById('nav' + tab.charAt(0).toUpperCase() + tab.slice(1)).className = "px-5 py-1.5 rounded-lg text-sm font-medium bg-purple-600 text-white transition";
             const targetSec = document.getElementById(tab.toLowerCase() + 'Section');
             if(targetSec) targetSec.classList.remove('hidden');
+
+            if(tab === 'gallery') {
+                renderGalleryViews();
+            }
         }
 
         function setGeneratorMode(mode) {
@@ -320,8 +345,8 @@
                 videoOpts.classList.remove('hidden');
             } else if(mode === 'image-generator') {
                 document.getElementById('btnImgGen').className = "px-4 py-2 rounded-lg text-sm font-medium bg-purple-600 text-white transition shadow";
-                multiSec.classList.remove('hidden'); // Izinkan upload referensi untuk AI Image Generator
-                videoOpts.classList.add('hidden'); // Sembunyikan opsi durasi video
+                multiSec.classList.remove('hidden');
+                videoOpts.classList.add('hidden');
             }
         }
 
@@ -379,7 +404,6 @@
                 reader.onload = function(e) {
                     const imgObj = { name: file.name, url: e.target.result };
                     uploadedImages.push(imgObj);
-                    // Masukkan ke galeri global agar bisa diakses lewat Add from Gallery
                     if(!allGlobalGallery.some(item => item.name === file.name)) {
                         allGlobalGallery.push(imgObj);
                     }
@@ -419,7 +443,7 @@
             if(allGlobalGallery.length === 0) {
                 grid.innerHTML = `<p class="text-xs text-gray-400 col-span-3 text-center py-6">Belum ada riwayat foto yang diunggah sebelumnya.</p>`;
             } else {
-                allGlobalGallery.forEach((item, idx) => {
+                allGlobalGallery.forEach((item) => {
                     const card = document.createElement('div');
                     card.className = "bg-[#0b0f17] border border-gray-700 hover:border-purple-500 rounded-xl p-2 cursor-pointer transition flex flex-col items-center";
                     card.onclick = () => selectFromGallery(item);
@@ -470,25 +494,84 @@
                 document.getElementById('progressPercent').innerText = "100%";
                 document.getElementById('progressText').innerText = "Selesai dibuat.";
                 
-                // Aktifkan tombol download
                 const dlBtn = document.getElementById('downloadBtn');
                 dlBtn.disabled = false;
                 dlBtn.className = "w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:opacity-95 text-white font-medium py-2.5 rounded-xl transition shadow-lg";
 
                 if(currentMode === 'image-generator') {
-                    // Simulasi hasil gambar
                     const imgResult = document.getElementById('resultImage');
                     imgResult.src = uploadedImages.length > 0 ? uploadedImages[0].url : "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=60";
                     imgResult.classList.remove('hidden');
                     document.getElementById('videoPlaceholder').classList.add('hidden');
+                    
+                    // Simpan ke galeri render
+                    renderedVideoGallery.push({ type: 'image', url: imgResult.src, title: prompt });
                 } else {
                     const vidResult = document.getElementById('resultVideo');
                     vidResult.classList.remove('hidden');
                     document.getElementById('videoPlaceholder').classList.add('hidden');
+                    
+                    // Simpan ke galeri render
+                    renderedVideoGallery.push({ type: 'video', title: prompt, meta: `${selectedDuration} • ${selectedResolution}` });
                 }
 
                 alert("Generasi konten berhasil diproses!");
             }, 3000);
+        }
+
+        function renderGalleryViews() {
+            // Render Video Galeri
+            const vidGrid = document.getElementById('videoGalleryGrid');
+            vidGrid.innerHTML = '';
+            if(renderedVideoGallery.length === 0) {
+                vidGrid.innerHTML = `<p class="text-xs text-gray-500 italic col-span-full">Belum ada video yang dirender.</p>`;
+            } else {
+                renderedVideoGallery.forEach((vid, idx) => {
+                    const card = document.createElement('div');
+                    card.className = "bg-[#131b2e] border border-gray-800 rounded-xl p-3 flex flex-col justify-between";
+                    card.innerHTML = `
+                        <div class="aspect-video bg-black/40 rounded-lg overflow-hidden mb-2 flex items-center justify-center text-gray-500 text-xs">🎬 [Pratinjau Video]</div>
+                        <p class="text-xs font-bold text-white truncate">${vid.title}</p>
+                        <p class="text-[10px] text-purple-400 mb-2">${vid.meta || 'Gambar AI'}</p>
+                        <button onclick="deleteRenderedVideo(${idx})" class="w-full bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 text-[10px] py-1 rounded-lg transition">Hapus Video</button>
+                    `;
+                    vidGrid.appendChild(card);
+                });
+            }
+
+            // Render Foto Referensi Galeri
+            const photoGrid = document.getElementById('photoGalleryGrid');
+            photoGrid.innerHTML = '';
+            if(allGlobalGallery.length === 0) {
+                photoGrid.innerHTML = `<p class="text-xs text-gray-500 italic col-span-full">Belum ada foto referensi yang diunggah.</p>`;
+            } else {
+                allGlobalGallery.forEach((item, idx) => {
+                    const card = document.createElement('div');
+                    card.className = "bg-[#131b2e] border border-gray-800 rounded-xl p-3 flex flex-col justify-between";
+                    card.innerHTML = `
+                        <div class="w-full aspect-square rounded-lg overflow-hidden mb-2 bg-black/40">
+                            <img src="${item.url}" class="w-full h-full object-cover">
+                        </div>
+                        <p class="text-[11px] text-gray-300 truncate font-medium mb-2" title="${item.name}">${item.name}</p>
+                        <button onclick="deleteGlobalPhoto(${idx})" class="w-full bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 text-[10px] py-1 rounded-lg transition">Hapus Foto</button>
+                    `;
+                    photoGrid.appendChild(card);
+                });
+            }
+        }
+
+        function deleteRenderedVideo(index) {
+            if(confirm("Hapus video ini dari galeri?")) {
+                renderedVideoGallery.splice(index, 1);
+                renderGalleryViews();
+            }
+        }
+
+        function deleteGlobalPhoto(index) {
+            if(confirm("Hapus foto referensi ini dari galeri?")) {
+                allGlobalGallery.splice(index, 1);
+                renderGalleryViews();
+            }
         }
 
         function downloadResult() {
