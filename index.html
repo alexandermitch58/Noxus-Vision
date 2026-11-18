@@ -8,26 +8,97 @@
 </head>
 <body class="bg-[#0b0f17] text-gray-100 font-sans min-h-screen flex flex-col">
 
-    <!-- MODAL LOGIN (Sistem Login Pengguna & Admin) -->
-    <div id="loginModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md">
-        <div class="bg-[#131b2e] border border-purple-500/30 p-8 rounded-2xl w-full max-w-md shadow-2xl">
-            <div class="text-center mb-6">
-                <h2 class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">Noxus Vision Login</h2>
-                <p class="text-sm text-gray-400 mt-1">Silakan masuk untuk mengakses Cloud AI Studio</p>
+    <!-- MODAL LOGIN / SIGN UP / RESET PASSWORD -->
+    <div id="loginModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md px-4">
+        <div class="bg-[#131b2e] border border-purple-500/30 p-8 rounded-2xl w-full max-w-md shadow-2xl relative">
+            
+            <!-- FORM LOGIN UTAMA -->
+            <div id="formLoginView">
+                <div class="text-center mb-6">
+                    <h2 class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">Noxus Vision Login</h2>
+                    <p class="text-sm text-gray-400 mt-1">Masuk sebagai Pengguna atau Admin</p>
+                </div>
+
+                <!-- Info Akun Bawaan -->
+                <div class="mb-4 p-3 bg-purple-950/40 border border-purple-500/30 rounded-xl text-xs text-purple-300 space-y-1">
+                    <div>👑 <strong>Admin:</strong> admin@noxusvision.com / admin123</div>
+                    <div>👤 <strong>User:</strong> user@noxusvision.com / user123</div>
+                </div>
+
+                <form onsubmit="handleLogin(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1">Email / Username</label>
+                        <input type="text" id="loginUser" required class="w-full bg-[#0b0f17] border border-gray-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500" placeholder="admin@noxusvision.com">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1">Password</label>
+                        <div class="relative">
+                            <input type="password" id="loginPass" required class="w-full bg-[#0b0f17] border border-gray-700 rounded-lg px-4 py-2.5 pr-10 text-sm focus:outline-none focus:border-purple-500" placeholder="••••••••">
+                            <button type="button" onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-xs text-gray-400 hover:text-white">
+                                👁️
+                            </button>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-medium py-2.5 rounded-lg transition shadow-lg shadow-purple-600/30">
+                        Masuk ke Studio
+                    </button>
+                </form>
+
+                <!-- Tombol Navigasi Bawah (Reset Password & Sign Up) -->
+                <div class="flex justify-between items-center mt-6 text-xs text-gray-400 pt-4 border-t border-gray-800">
+                    <button onclick="switchModalView('reset')" class="hover:text-purple-400 transition">Lupa Password?</button>
+                    <span>Belum punya akun? <button onclick="switchModalView('signup')" class="text-purple-400 font-semibold hover:underline">Sign Up</button></span>
+                </div>
             </div>
-            <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1">Email / Username</label>
-                    <input type="text" id="loginUser" required class="w-full bg-[#0b0f17] border border-gray-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500" placeholder="alexander@mitch.com">
+
+            <!-- FORM SIGN UP (Daftar Akun Baru) -->
+            <div id="formSignupView" class="hidden">
+                <div class="text-center mb-6">
+                    <h2 class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">Buat Akun Baru</h2>
+                    <p class="text-sm text-gray-400 mt-1">Daftar untuk mulai merender video AI</p>
                 </div>
-                <div>
-                    <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1">Password</label>
-                    <input type="password" id="loginPass" required class="w-full bg-[#0b0f17] border border-gray-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500" placeholder="••••••••">
+                <form onsubmit="handleSignup(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1">Nama Lengkap</label>
+                        <input type="text" required class="w-full bg-[#0b0f17] border border-gray-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500" placeholder="Alexander Mitch">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1">Email</label>
+                        <input type="email" required class="w-full bg-[#0b0f17] border border-gray-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500" placeholder="email@domain.com">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1">Password Baru</label>
+                        <input type="password" required class="w-full bg-[#0b0f17] border border-gray-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500" placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-medium py-2.5 rounded-lg transition shadow-lg shadow-purple-600/30">
+                        Daftar Sekarang
+                    </button>
+                </form>
+                <div class="text-center mt-6 text-xs text-gray-400 pt-4 border-t border-gray-800">
+                    Sudah punya akun? <button onclick="switchModalView('login')" class="text-purple-400 font-semibold hover:underline">Login di sini</button>
                 </div>
-                <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-medium py-2.5 rounded-lg transition shadow-lg shadow-purple-600/30">
-                    Masuk ke Studio
-                </button>
-            </form>
+            </div>
+
+            <!-- FORM RESET PASSWORD -->
+            <div id="formResetView" class="hidden">
+                <div class="text-center mb-6">
+                    <h2 class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">Reset Password</h2>
+                    <p class="text-sm text-gray-400 mt-1">Masukkan email terdaftar untuk pemulihan</p>
+                </div>
+                <form onsubmit="handleReset(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1">Email Akun</label>
+                        <input type="email" required class="w-full bg-[#0b0f17] border border-gray-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500" placeholder="email@domain.com">
+                    </div>
+                    <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-medium py-2.5 rounded-lg transition shadow-lg shadow-purple-600/30">
+                        Kirim Instruksi Reset
+                    </button>
+                </form>
+                <div class="text-center mt-6 text-xs text-gray-400 pt-4 border-t border-gray-800">
+                    Kembali ke <button onclick="switchModalView('login')" class="text-purple-400 font-semibold hover:underline">Login</button>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -44,7 +115,7 @@
             <button onclick="switchTabNav('studio')" id="navStudio" class="px-5 py-1.5 rounded-lg text-sm font-medium bg-purple-600 text-white transition">Studio</button>
             <button onclick="switchTabNav('gallery')" id="navGallery" class="px-5 py-1.5 rounded-lg text-sm font-medium text-gray-400 hover:text-white transition">Gallery</button>
             <button onclick="switchTabNav('apikey')" id="navApikey" class="px-5 py-1.5 rounded-lg text-sm font-medium text-gray-400 hover:text-white transition">API Key</button>
-            <button onclick="switchTabNav('admin')" id="navAdmin" class="px-5 py-1.5 rounded-lg text-sm font-medium text-gray-400 hover:text-white transition">Admin Panel</button>
+            <button onclick="switchTabNav('admin')" id="navAdmin" class="px-5 py-1.5 rounded-lg text-sm font-medium text-gray-400 hover:text-white transition hidden">Admin Panel</button>
         </nav>
         <div class="flex items-center space-x-4">
             <div class="bg-purple-950/50 border border-purple-500/30 px-3 py-1.5 rounded-lg text-xs font-semibold text-purple-300">⚡ 10 Kredit</div>
@@ -55,17 +126,15 @@
     <!-- KONTEN UTAMA STUDIO -->
     <main class="flex-1 max-w-7xl w-full mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
         
-        <!-- KOLOM KIRI & TENGAH: PENGATURAN GENERATE -->
         <div class="lg:col-span-2 space-y-6">
-            
-            <!-- PILIHAN MODE UTAMA (Text to Video, Image to Video, AI Image Generator) -->
+            <!-- PILIHAN MODE -->
             <div class="flex space-x-3 bg-[#131b2e] p-1.5 rounded-xl border border-gray-800 w-fit">
                 <button onclick="setGeneratorMode('text-to-video')" id="btnT2V" class="px-4 py-2 rounded-lg text-sm font-medium bg-purple-600 text-white transition shadow">Text to Video</button>
                 <button onclick="setGeneratorMode('image-to-video')" id="btnI2V" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-white transition">Image to Video</button>
                 <button onclick="setGeneratorMode('image-generator')" id="btnImgGen" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-white transition">AI Image Generator</button>
             </div>
 
-            <!-- KOTAK INPUT PROMPT (Tanpa Batasan Karakter) -->
+            <!-- PROMPT (Tanpa Batas Karakter) -->
             <div class="bg-[#131b2e] border border-gray-800 rounded-2xl p-5 shadow-xl">
                 <div class="flex justify-between items-center mb-2">
                     <label class="text-sm font-medium text-gray-300">Prompt / Deskripsi Adegan</label>
@@ -73,22 +142,20 @@
                 </div>
                 <textarea id="promptInput" oninput="updateCharCount()" rows="4" class="w-full bg-[#0b0f17] border border-gray-700 rounded-xl p-4 text-sm text-gray-200 focus:outline-none focus:border-purple-500 transition resize-none" placeholder="Ceritakan ide adegan sinematik Anda secara mendetail tanpa batasan karakter..."></textarea>
                 
-                <!-- UPLOAD MULTI GAMBAR (Hingga 10 Referensi khusus Image-to-Video) -->
+                <!-- UPLOAD MULTI GAMBAR (Hingga 10 Referensi) -->
                 <div id="multiImageSection" class="mt-4 hidden">
                     <label class="block text-xs font-medium text-purple-400 mb-2">Unggah Referensi Gambar (Maksimal 10 Gambar)</label>
                     <input type="file" id="imageFilesInput" multiple accept="image/*" onchange="handleImageUploads(event)" class="w-full text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-500 cursor-pointer">
                     <div id="imagePreviewContainer" class="grid grid-cols-5 gap-2 mt-3"></div>
                 </div>
 
-                <!-- Prompt Cepat / Presets -->
                 <div class="flex flex-wrap gap-2 mt-3">
                     <button onclick="setPrompt('Ksatria Dayak berdiri di atas tebing batu karang Sungai Kahayan saat senja menyala keemasan.')" class="text-xs bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded-lg text-gray-300 transition">+ Senja Borneo</button>
                     <button onclick="setPrompt('Pertarungan wuxia di tengah hutan bambu berkabut dengan koreografi gerakan cepat.')" class="text-xs bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded-lg text-gray-300 transition">+ Wuxia Bambu</button>
-                    <button onclick="setPrompt('Pasukan elit dalam pertempuran malam hari dengan efek sinematik asap dan ledakan.')" class="text-xs bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded-lg text-gray-300 transition">+ Aksi Tempur</button>
                 </div>
             </div>
 
-            <!-- PILIHAN MODEL AI (Terhubung ke ToAPIs) -->
+            <!-- PILIHAN MODEL AI -->
             <div>
                 <h3 class="text-sm font-semibold text-gray-300 mb-3">PILIH MODEL AI (ToAPIs Gateway)</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -123,21 +190,21 @@
                 </div>
             </div>
 
-            <button onclick="generateContent()" class="w-full bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 hover:opacity-95 text-white font-bold py-4 rounded-2xl shadow-xl transition transform active:scale-[0.99]">
+            <button onclick="generateContent()" class="w-full bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 hover:opacity-95 text-white font-bold py-4 rounded-2xl shadow-xl transition">
                 ✨ Mulai Generate Konten AI Sekarang
             </button>
         </div>
 
-        <!-- KOLOM KANAN: PREVIEW STUDIO -->
+        <!-- PREVIEW STUDIO -->
         <div class="bg-[#131b2e] border border-gray-800 rounded-2xl p-5 flex flex-col justify-between shadow-xl">
             <div>
                 <div class="flex justify-between items-center mb-3">
                     <h3 class="text-sm font-bold text-gray-300">PREVIEW STUDIO</h3>
                     <span id="previewStatus" class="text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-0.5 rounded-full font-medium">READY</span>
                 </div>
-                <div class="aspect-video bg-[#0b0f17] rounded-xl border border-gray-800 flex items-center justify-center relative overflow-hidden group">
+                <div class="aspect-video bg-[#0b0f17] rounded-xl border border-gray-800 flex items-center justify-center relative overflow-hidden">
                     <div id="videoPlaceholder" class="text-center p-4">
-                        <div class="w-12 h-12 bg-purple-600/30 text-purple-400 rounded-full flex items-center justify-center mx-auto mb-2 text-lg shadow-inner">▶</div>
+                        <div class="w-12 h-12 bg-purple-600/30 text-purple-400 rounded-full flex items-center justify-center mx-auto mb-2 text-lg">▶</div>
                         <p class="text-xs text-gray-400">Hasil render video/gambar akan muncul di sini</p>
                     </div>
                     <video id="resultVideo" controls class="w-full h-full object-cover hidden"></video>
@@ -156,19 +223,51 @@
 
     </main>
 
-    <!-- SCRIPT LOGIKA APLIKASI -->
+    <!-- SCRIPT JAVASCRIPT -->
     <script>
-        let currentMode = 'text-to-video';
-        let selectedModelId = 'seedance-2.5';
         let uploadedImages = [];
+
+        function togglePasswordVisibility() {
+            const passInput = document.getElementById('loginPass');
+            passInput.type = passInput.type === 'password' ? 'text' : 'password';
+        }
+
+        function switchModalView(view) {
+            document.getElementById('formLoginView').classList.add('hidden');
+            document.getElementById('formSignupView').classList.add('hidden');
+            document.getElementById('formResetView').classList.add('hidden');
+
+            if(view === 'login') document.getElementById('formLoginView').classList.remove('hidden');
+            if(view === 'signup') document.getElementById('formSignupView').classList.remove('hidden');
+            if(view === 'reset') document.getElementById('formResetView').classList.remove('hidden');
+        }
 
         function handleLogin(e) {
             e.preventDefault();
+            const user = document.getElementById('loginUser').value;
             document.getElementById('loginModal').classList.add('hidden');
+            
+            // Jika login sebagai admin, tampilkan menu Admin Panel di navbar
+            if(user.includes('admin')) {
+                document.getElementById('navAdmin').classList.remove('hidden');
+            }
+        }
+
+        function handleSignup(e) {
+            e.preventDefault();
+            alert("Pendaftaran berhasil! Silakan login dengan akun baru Anda.");
+            switchModalView('login');
+        }
+
+        function handleReset(e) {
+            e.preventDefault();
+            alert("Instruksi pemulihan password telah dikirim ke email Anda.");
+            switchModalView('login');
         }
 
         function logout() {
             document.getElementById('loginModal').classList.remove('hidden');
+            document.getElementById('navAdmin').classList.add('hidden');
         }
 
         function switchTabNav(tab) {
@@ -178,14 +277,9 @@
             });
             const activeBtn = document.getElementById('nav' + tab.charAt(0).toUpperCase() + tab.slice(1));
             if(activeBtn) activeBtn.className = "px-5 py-1.5 rounded-lg text-sm font-medium bg-purple-600 text-white transition";
-            
-            if(tab === 'apikey') {
-                window.location.href = "#apikey-settings"; // Mengarahkan ke konfigurasi API
-            }
         }
 
         function setGeneratorMode(mode) {
-            currentMode = mode;
             ['btnT2V', 'btnI2V', 'btnImgGen'].forEach(id => {
                 document.getElementById(id).className = "px-4 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-white transition";
             });
@@ -204,11 +298,12 @@
 
         function updateCharCount() {
             const text = document.getElementById('promptInput').value;
-            document.getElementById('charCountinnerText') = text.length + " karakter (Tanpa Batas)";
+            document.getElementById('charCount').innerText = text.length + " karakter (Tanpa Batas)";
         }
 
         function setPrompt(text) {
             document.getElementById('promptInput').value = text;
+            updateCharCount();
         }
 
         function handleImageUploads(event) {
@@ -242,7 +337,6 @@
         }
 
         function selectModel(modelId) {
-            selectedModelId = modelId;
             document.querySelectorAll('.model-card').forEach(card => {
                 card.className = "model-card border-2 border-gray-800 bg-[#131b2e] p-4 rounded-xl cursor-pointer transition hover:border-gray-600";
             });
@@ -260,7 +354,6 @@
             document.getElementById('previewStatus').innerText = "RENDERING...";
             document.getElementById('previewStatus').className = "text-xs bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2.5 py-0.5 rounded-full font-medium animate-pulse";
             
-            // Integrasi ke Gateway ToAPIs menggunakan fetch (menggunakan API Key dari konfigurasi)
             setTimeout(() => {
                 document.getElementById('previewStatus').innerText = "READY";
                 document.getElementById('previewStatus').className = "text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-0.5 rounded-full font-medium";
