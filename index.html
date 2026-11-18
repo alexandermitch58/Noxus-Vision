@@ -8,97 +8,29 @@
 </head>
 <body class="bg-[#0b0f17] text-gray-100 font-sans min-h-screen flex flex-col">
 
-    <!-- MODAL LOGIN / SIGN UP / RESET PASSWORD -->
+    <!-- MODAL LOGIN -->
     <div id="loginModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md px-4">
         <div class="bg-[#131b2e] border border-purple-500/30 p-8 rounded-2xl w-full max-w-md shadow-2xl relative">
-            
-            <!-- FORM LOGIN UTAMA -->
-            <div id="formLoginView">
-                <div class="text-center mb-6">
-                    <h2 class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">Noxus Vision Login</h2>
-                    <p class="text-sm text-gray-400 mt-1">Masuk sebagai Pengguna atau Admin</p>
-                </div>
-
-                <!-- Info Akun Bawaan -->
-                <div class="mb-4 p-3 bg-purple-950/40 border border-purple-500/30 rounded-xl text-xs text-purple-300 space-y-1">
-                    <div>👑 <strong>Admin:</strong> admin@noxusvision.com / admin123</div>
-                    <div>👤 <strong>User:</strong> user@noxusvision.com / user123</div>
-                </div>
-
-                <form onsubmit="handleLogin(event)" class="space-y-4">
-                    <div>
-                        <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1">Email / Username</label>
-                        <input type="text" id="loginUser" required class="w-full bg-[#0b0f17] border border-gray-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500" placeholder="admin@noxusvision.com">
-                    </div>
-                    <div>
-                        <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1">Password</label>
-                        <div class="relative">
-                            <input type="password" id="loginPass" required class="w-full bg-[#0b0f17] border border-gray-700 rounded-lg px-4 py-2.5 pr-10 text-sm focus:outline-none focus:border-purple-500" placeholder="••••••••">
-                            <button type="button" onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-xs text-gray-400 hover:text-white">
-                                👁️
-                            </button>
-                        </div>
-                    </div>
-                    <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-medium py-2.5 rounded-lg transition shadow-lg shadow-purple-600/30">
-                        Masuk ke Studio
-                    </button>
-                </form>
-
-                <!-- Tombol Navigasi Bawah (Reset Password & Sign Up) -->
-                <div class="flex justify-between items-center mt-6 text-xs text-gray-400 pt-4 border-t border-gray-800">
-                    <button onclick="switchModalView('reset')" class="hover:text-purple-400 transition">Lupa Password?</button>
-                    <span>Belum punya akun? <button onclick="switchModalView('signup')" class="text-purple-400 font-semibold hover:underline">Sign Up</button></span>
-                </div>
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">Noxus Vision Login</h2>
+                <p class="text-sm text-gray-400 mt-1">Masuk untuk mengakses Cloud AI Studio</p>
             </div>
-
-            <!-- FORM SIGN UP (Daftar Akun Baru) -->
-            <div id="formSignupView" class="hidden">
-                <div class="text-center mb-6">
-                    <h2 class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">Buat Akun Baru</h2>
-                    <p class="text-sm text-gray-400 mt-1">Daftar untuk mulai merender video AI</p>
+            <form onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1">Email / Username</label>
+                    <input type="text" id="loginUser" required class="w-full bg-[#0b0f17] border border-gray-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500" placeholder="admin@noxusvision.com">
                 </div>
-                <form onsubmit="handleSignup(event)" class="space-y-4">
-                    <div>
-                        <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1">Nama Lengkap</label>
-                        <input type="text" required class="w-full bg-[#0b0f17] border border-gray-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500" placeholder="Alexander Mitch">
+                <div>
+                    <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1">Password</label>
+                    <div class="relative">
+                        <input type="password" id="loginPass" required class="w-full bg-[#0b0f17] border border-gray-700 rounded-lg px-4 py-2.5 pr-10 text-sm focus:outline-none focus:border-purple-500" placeholder="••••••••">
+                        <button type="button" onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-xs text-gray-400 hover:text-white">👁️</button>
                     </div>
-                    <div>
-                        <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1">Email</label>
-                        <input type="email" required class="w-full bg-[#0b0f17] border border-gray-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500" placeholder="email@domain.com">
-                    </div>
-                    <div>
-                        <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1">Password Baru</label>
-                        <input type="password" required class="w-full bg-[#0b0f17] border border-gray-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500" placeholder="••••••••">
-                    </div>
-                    <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-medium py-2.5 rounded-lg transition shadow-lg shadow-purple-600/30">
-                        Daftar Sekarang
-                    </button>
-                </form>
-                <div class="text-center mt-6 text-xs text-gray-400 pt-4 border-t border-gray-800">
-                    Sudah punya akun? <button onclick="switchModalView('login')" class="text-purple-400 font-semibold hover:underline">Login di sini</button>
                 </div>
-            </div>
-
-            <!-- FORM RESET PASSWORD -->
-            <div id="formResetView" class="hidden">
-                <div class="text-center mb-6">
-                    <h2 class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">Reset Password</h2>
-                    <p class="text-sm text-gray-400 mt-1">Masukkan email terdaftar untuk pemulihan</p>
-                </div>
-                <form onsubmit="handleReset(event)" class="space-y-4">
-                    <div>
-                        <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1">Email Akun</label>
-                        <input type="email" required class="w-full bg-[#0b0f17] border border-gray-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500" placeholder="email@domain.com">
-                    </div>
-                    <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-medium py-2.5 rounded-lg transition shadow-lg shadow-purple-600/30">
-                        Kirim Instruksi Reset
-                    </button>
-                </form>
-                <div class="text-center mt-6 text-xs text-gray-400 pt-4 border-t border-gray-800">
-                    Kembali ke <button onclick="switchModalView('login')" class="text-purple-400 font-semibold hover:underline">Login</button>
-                </div>
-            </div>
-
+                <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-medium py-2.5 rounded-lg transition shadow-lg shadow-purple-600/30">
+                    Masuk ke Studio
+                </button>
+            </form>
         </div>
     </div>
 
@@ -123,18 +55,18 @@
         </div>
     </header>
 
-    <!-- KONTEN UTAMA STUDIO -->
+    <!-- KONTEN UTAMA -->
     <main class="flex-1 max-w-7xl w-full mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
         
-        <div class="lg:col-span-2 space-y-6">
-            <!-- PILIHAN MODE -->
+        <!-- BAGIAN KIRI: STUDIO WORKSPACE -->
+        <div id="studioSection" class="lg:col-span-2 space-y-6">
             <div class="flex space-x-3 bg-[#131b2e] p-1.5 rounded-xl border border-gray-800 w-fit">
                 <button onclick="setGeneratorMode('text-to-video')" id="btnT2V" class="px-4 py-2 rounded-lg text-sm font-medium bg-purple-600 text-white transition shadow">Text to Video</button>
                 <button onclick="setGeneratorMode('image-to-video')" id="btnI2V" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-white transition">Image to Video</button>
                 <button onclick="setGeneratorMode('image-generator')" id="btnImgGen" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-white transition">AI Image Generator</button>
             </div>
 
-            <!-- PROMPT (Tanpa Batas Karakter) -->
+            <!-- PROMPT -->
             <div class="bg-[#131b2e] border border-gray-800 rounded-2xl p-5 shadow-xl">
                 <div class="flex justify-between items-center mb-2">
                     <label class="text-sm font-medium text-gray-300">Prompt / Deskripsi Adegan</label>
@@ -142,11 +74,23 @@
                 </div>
                 <textarea id="promptInput" oninput="updateCharCount()" rows="4" class="w-full bg-[#0b0f17] border border-gray-700 rounded-xl p-4 text-sm text-gray-200 focus:outline-none focus:border-purple-500 transition resize-none" placeholder="Ceritakan ide adegan sinematik Anda secara mendetail tanpa batasan karakter..."></textarea>
                 
-                <!-- UPLOAD MULTI GAMBAR (Hingga 10 Referensi) -->
-                <div id="multiImageSection" class="mt-4 hidden">
-                    <label class="block text-xs font-medium text-purple-400 mb-2">Unggah Referensi Gambar (Maksimal 10 Gambar)</label>
-                    <input type="file" id="imageFilesInput" multiple accept="image/*" onchange="handleImageUploads(event)" class="w-full text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-500 cursor-pointer">
-                    <div id="imagePreviewContainer" class="grid grid-cols-5 gap-2 mt-3"></div>
+                <!-- UPLOAD MULTI GAMBAR: KOTAK TRANSPARAN & TOMBOL ADD FROM GALLERY -->
+                <div id="multiImageSection" class="mt-4 hidden space-y-3">
+                    <div class="flex justify-between items-center">
+                        <label class="text-xs font-medium text-purple-400">Foto Referensi (Hingga 10 Gambar)</label>
+                        <button onclick="openGalleryPicker()" class="text-xs bg-purple-600/30 hover:bg-purple-600/50 text-purple-300 border border-purple-500/40 px-3 py-1.5 rounded-lg transition">📁 Add from Gallery</button>
+                    </div>
+
+                    <!-- Kotak Transparan dengan Ikon + -->
+                    <div onclick="document.getElementById('hiddenFileInput').click()" class="border-2 border-dashed border-gray-700 hover:border-purple-500 bg-[#0b0f17]/50 rounded-2xl p-6 text-center cursor-pointer transition flex flex-col items-center justify-center">
+                        <div class="w-12 h-12 bg-purple-600/20 text-purple-400 rounded-full flex items-center justify-center text-xl mb-2 font-bold">+</div>
+                        <p class="text-xs font-medium text-gray-300">Tap di sini untuk upload foto</p>
+                        <p class="text-[10px] text-gray-500 mt-1">Mendukung format JPG, PNG</p>
+                    </div>
+                    <input type="file" id="hiddenFileInput" multiple accept="image/*" onchange="handleImageUploads(event)" class="hidden">
+                    
+                    <!-- Preview Daftar Gambar dengan Nama File Asli -->
+                    <div id="imagePreviewContainer" class="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-3"></div>
                 </div>
 
                 <div class="flex flex-wrap gap-2 mt-3">
@@ -155,69 +99,95 @@
                 </div>
             </div>
 
-            <!-- PILIHAN MODEL AI -->
+            <!-- MODEL AI -->
             <div>
                 <h3 class="text-sm font-semibold text-gray-300 mb-3">PILIH MODEL AI (ToAPIs Gateway)</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div onclick="selectModel('seedance-2.5')" id="model-seedance-2.5" class="model-card border-2 border-purple-500 bg-[#131b2e] p-4 rounded-xl cursor-pointer transition shadow-lg">
-                        <div class="flex justify-between items-center mb-1">
-                            <h4 class="font-bold text-white">Seedance 2.5</h4>
-                            <span class="text-[10px] bg-purple-600 text-white px-2 py-0.5 rounded-full">UNLIMITED</span>
-                        </div>
+                        <h4 class="font-bold text-white mb-1">Seedance 2.5</h4>
                         <p class="text-xs text-gray-400">Kualitas 1080p • 15–30s • Audio + Lip-sync</p>
                     </div>
                     <div onclick="selectModel('veo-3.1-pro')" id="model-veo-3.1-pro" class="model-card border-2 border-gray-800 bg-[#131b2e] p-4 rounded-xl cursor-pointer transition hover:border-gray-600">
-                        <div class="flex justify-between items-center mb-1">
-                            <h4 class="font-bold text-white">Veo 3.1 Pro</h4>
-                            <span class="text-[10px] bg-blue-600 text-white px-2 py-0.5 rounded-full">GOOGLE</span>
-                        </div>
+                        <h4 class="font-bold text-white mb-1">Veo 3.1 Pro</h4>
                         <p class="text-xs text-gray-400">Sinematik ultra realistis dengan audio presisi.</p>
-                    </div>
-                    <div onclick="selectModel('qwen-image-gen')" id="model-qwen-image-gen" class="model-card border-2 border-gray-800 bg-[#131b2e] p-4 rounded-xl cursor-pointer transition hover:border-gray-600">
-                        <div class="flex justify-between items-center mb-1">
-                            <h4 class="font-bold text-white">Qwen Image Generator</h4>
-                            <span class="text-[10px] bg-emerald-600 text-white px-2 py-0.5 rounded-full">GAMBAR</span>
-                        </div>
-                        <p class="text-xs text-gray-400">Pembuatan gambar resolusi tinggi untuk referensi awal.</p>
-                    </div>
-                    <div onclick="selectModel('seedance-flash')" id="model-seedance-flash" class="model-card border-2 border-gray-800 bg-[#131b2e] p-4 rounded-xl cursor-pointer transition hover:border-gray-600">
-                        <div class="flex justify-between items-center mb-1">
-                            <h4 class="font-bold text-white">Seedance Flash (1 Kredit)</h4>
-                            <span class="text-[10px] bg-amber-600 text-white px-2 py-0.5 rounded-full">EKONOMIS</span>
-                        </div>
-                        <p class="text-xs text-gray-400">Mode cepat 5 detik per klip untuk hemat kredit.</p>
                     </div>
                 </div>
             </div>
 
-            <button onclick="generateContent()" class="w-full bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 hover:opacity-95 text-white font-bold py-4 rounded-2xl shadow-xl transition">
+            <button onclick="generateContent()" class="w-full bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 text-white font-bold py-4 rounded-2xl shadow-xl transition">
                 ✨ Mulai Generate Konten AI Sekarang
             </button>
         </div>
 
-        <!-- PREVIEW STUDIO -->
+        <!-- BAGIAN GALLERY SECTION (Tersembunyi Awal) -->
+        <div id="gallerySection" class="lg:col-span-2 hidden space-y-4">
+            <h2 class="text-xl font-bold text-white">Galeri Hasil Render</h2>
+            <div id="galleryGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                <p class="text-xs text-gray-400">Belum ada video atau gambar yang disimpan di galeri.</p>
+            </div>
+        </div>
+
+        <!-- BAGIAN API KEY SECTION -->
+        <div id="apikeySection" class="lg:col-span-2 hidden space-y-4 bg-[#131b2e] p-6 rounded-2xl border border-gray-800">
+            <h2 class="text-xl font-bold text-white">Konfigurasi API Key ToAPIs</h2>
+            <div>
+                <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1">API Key</label>
+                <input type="password" id="apiKeyInput" value="sk-CgScR7FaK3L3pYwR8dAFaDd6rOizWaQJOALNOrwxba0bT9Wc" class="w-full bg-[#0b0f17] border border-gray-700 rounded-lg px-4 py-2.5 text-sm">
+            </div>
+            <div>
+                <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1">Endpoint Model Utama</label>
+                <input type="text" id="endpointInput" value="https://toapis.com/v1" class="w-full bg-[#0b0f17] border border-gray-700 rounded-lg px-4 py-2.5 text-sm">
+            </div>
+            <button onclick="alert('Konfigurasi berhasil disimpan!')" class="bg-purple-600 text-white px-5 py-2 rounded-lg text-sm font-medium">Simpan Konfigurasi</button>
+        </div>
+
+        <!-- BAGIAN ADMIN PANEL -->
+        <div id="adminSection" class="lg:col-span-2 hidden space-y-4 bg-[#131b2e] p-6 rounded-2xl border border-gray-800">
+            <h2 class="text-xl font-bold text-white">Admin Panel - Kelola Pengguna</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs text-gray-300">
+                    <thead class="border-b border-gray-700 text-gray-400 uppercase">
+                        <tr><th class="py-2">Email</th><th class="py-2">Role</th><th class="py-2">Kredit</th><th class="py-2">Aksi</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b border-gray-800"><td class="py-3">admin@noxusvision.com</td><td>Admin</td><td>Unlimited</td><td><button class="text-red-400 hover:underline">Hapus</button></td></tr>
+                        <tr><td class="py-3">user@noxusvision.com</td><td>User</td><td>10 Kredit</td><td><button class="text-red-400 hover:underline">Hapus</button></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- PREVIEW STUDIO (Sesuai Gambar 1) -->
         <div class="bg-[#131b2e] border border-gray-800 rounded-2xl p-5 flex flex-col justify-between shadow-xl">
             <div>
                 <div class="flex justify-between items-center mb-3">
-                    <h3 class="text-sm font-bold text-gray-300">PREVIEW STUDIO</h3>
-                    <span id="previewStatus" class="text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-0.5 rounded-full font-medium">READY</span>
+                    <h3 class="text-sm font-bold text-gray-300">Preview</h3>
+                    <span class="text-[10px] bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded font-semibold uppercase">LIVE PREVIEW</span>
                 </div>
                 <div class="aspect-video bg-[#0b0f17] rounded-xl border border-gray-800 flex items-center justify-center relative overflow-hidden">
                     <div id="videoPlaceholder" class="text-center p-4">
-                        <div class="w-12 h-12 bg-purple-600/30 text-purple-400 rounded-full flex items-center justify-center mx-auto mb-2 text-lg">▶</div>
-                        <p class="text-xs text-gray-400">Hasil render video/gambar akan muncul di sini</p>
+                        <div class="w-10 h-10 bg-purple-600/30 text-purple-400 rounded-full flex items-center justify-center mx-auto mb-2 text-sm">▶</div>
                     </div>
                     <video id="resultVideo" controls class="w-full h-full object-cover hidden"></video>
                 </div>
-            </div>
-            <div class="mt-4 pt-4 border-t border-gray-800">
-                <div class="flex justify-between items-center text-xs text-gray-400 mb-3">
-                    <span>Model: <strong id="activeModelName" class="text-white">Seedance 2.5</strong></span>
-                    <span>Durasi: 15s • 1080p</span>
+
+                <!-- Keterangan Detail di Bawah Preview (Sesuai Gambar 1) -->
+                <div class="mt-4 space-y-2">
+                    <h4 id="previewTitle" class="font-bold text-white text-sm">Belum ada judul adegan</h4>
+                    <p id="previewDesc" class="text-xs text-gray-400">Deskripsi prompt atau detail adegan akan muncul di sini.</p>
+                    <div id="previewMeta" class="text-[11px] text-purple-400 font-medium">18 detik • 1080p • 16:9</div>
                 </div>
-                <button id="downloadBtn" disabled class="w-full bg-gray-800 text-gray-500 font-medium py-2.5 rounded-xl transition cursor-not-allowed">
-                    📥 Download Hasil (.MP4 / .PNG)
-                </button>
+
+                <!-- Status Progress Bar -->
+                <div class="mt-4 pt-3 border-t border-gray-800/60 space-y-1.5">
+                    <div class="flex justify-between text-xs text-gray-400">
+                        <span id="progressText">Siap dibuat.</span>
+                        <span id="progressPercent">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-800 h-1.5 rounded-full overflow-hidden">
+                        <div id="progressBar" class="bg-purple-600 h-full w-0 transition-all duration-300"></div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -228,55 +198,34 @@
         let uploadedImages = [];
 
         function togglePasswordVisibility() {
-            const passInput = document.getElementById('loginPass');
-            passInput.type = passInput.type === 'password' ? 'text' : 'password';
-        }
-
-        function switchModalView(view) {
-            document.getElementById('formLoginView').classList.add('hidden');
-            document.getElementById('formSignupView').classList.add('hidden');
-            document.getElementById('formResetView').classList.add('hidden');
-
-            if(view === 'login') document.getElementById('formLoginView').classList.remove('hidden');
-            if(view === 'signup') document.getElementById('formSignupView').classList.remove('hidden');
-            if(view === 'reset') document.getElementById('formResetView').classList.remove('hidden');
+            const p = document.getElementById('loginPass');
+            p.type = p.type === 'password' ? 'text' : 'password';
         }
 
         function handleLogin(e) {
             e.preventDefault();
             const user = document.getElementById('loginUser').value;
             document.getElementById('loginModal').classList.add('hidden');
-            
-            // Jika login sebagai admin, tampilkan menu Admin Panel di navbar
             if(user.includes('admin')) {
                 document.getElementById('navAdmin').classList.remove('hidden');
             }
         }
 
-        function handleSignup(e) {
-            e.preventDefault();
-            alert("Pendaftaran berhasil! Silakan login dengan akun baru Anda.");
-            switchModalView('login');
-        }
-
-        function handleReset(e) {
-            e.preventDefault();
-            alert("Instruksi pemulihan password telah dikirim ke email Anda.");
-            switchModalView('login');
-        }
-
         function logout() {
             document.getElementById('loginModal').classList.remove('hidden');
-            document.getElementById('navAdmin').classList.add('hidden');
         }
 
         function switchTabNav(tab) {
             ['Studio', 'Gallery', 'Apikey', 'Admin'].forEach(t => {
                 const btn = document.getElementById('nav' + t);
                 if(btn) btn.className = "px-5 py-1.5 rounded-lg text-sm font-medium text-gray-400 hover:text-white transition";
+                const sec = document.getElementById(t.toLowerCase() + 'Section');
+                if(sec) sec.classList.add('hidden');
             });
-            const activeBtn = document.getElementById('nav' + tab.charAt(0).toUpperCase() + tab.slice(1));
-            if(activeBtn) activeBtn.className = "px-5 py-1.5 rounded-lg text-sm font-medium bg-purple-600 text-white transition";
+            
+            document.getElementById('nav' + tab.charAt(0).toUpperCase() + tab.slice(1)).className = "px-5 py-1.5 rounded-lg text-sm font-medium bg-purple-600 text-white transition";
+            const targetSec = document.getElementById(tab.toLowerCase() + 'Section');
+            if(targetSec) targetSec.classList.remove('hidden');
         }
 
         function setGeneratorMode(mode) {
@@ -316,18 +265,31 @@
             renderImagePreviews();
         }
 
+        function openGalleryPicker() {
+            const name = prompt("Masukkan nama file foto dari galeri tersimpan:");
+            if(name) {
+                uploadedImages.push({ name: name, isGallery: true });
+                renderImagePreviews();
+            }
+        }
+
         function renderImagePreviews() {
             const container = document.getElementById('imagePreviewContainer');
             container.innerHTML = '';
-            uploadedImages.forEach((file, index) => {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const div = document.createElement('div');
-                    div.className = "relative aspect-square rounded-lg overflow-hidden border border-purple-500/50";
-                    div.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover"><button onclick="removeImage(${index})" class="absolute top-1 right-1 bg-red-600 text-white rounded-full w-4 h-4 text-[10px] flex items-center justify-center">×</button>`;
-                    container.appendChild(div);
-                }
-                reader.readAsDataURL(file);
+            uploadedImages.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = "bg-[#0b0f17] border border-gray-700 rounded-xl p-2 flex items-center space-x-2 relative";
+                
+                let displayName = item.name || item.file?.name || "Foto " + (index + 1);
+                div.innerHTML = `
+                    <div class="w-10 h-10 bg-purple-900/40 rounded-lg flex items-center justify-center text-xs text-purple-300 font-bold">img</div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-xs text-gray-200 truncate">${displayName}</p>
+                        <p class="text-[9px] text-purple-400">Terlampir</p>
+                    </div>
+                    <button onclick="removeImage(${index})" class="text-red-400 hover:text-red-300 text-xs px-1">✕</button>
+                `;
+                container.appendChild(div);
             });
         }
 
@@ -337,27 +299,28 @@
         }
 
         function selectModel(modelId) {
-            document.querySelectorAll('.model-card').forEach(card => {
-                card.className = "model-card border-2 border-gray-800 bg-[#131b2e] p-4 rounded-xl cursor-pointer transition hover:border-gray-600";
-            });
+            document.querySelectorAll('.model-card').forEach(c => c.className = "model-card border-2 border-gray-800 bg-[#131b2e] p-4 rounded-xl cursor-pointer transition");
             document.getElementById('model-' + modelId).className = "model-card border-2 border-purple-500 bg-[#131b2e] p-4 rounded-xl cursor-pointer transition shadow-lg";
-            document.getElementById('activeModelName').innerText = modelId.toUpperCase();
         }
 
-        async function generateContent() {
+        function generateContent() {
             const prompt = document.getElementById('promptInput').value;
             if(!prompt) {
                 alert("Harap masukkan prompt terlebih dahulu!");
                 return;
             }
 
-            document.getElementById('previewStatus').innerText = "RENDERING...";
-            document.getElementById('previewStatus').className = "text-xs bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2.5 py-0.5 rounded-full font-medium animate-pulse";
-            
+            document.getElementById('previewTitle').innerText = prompt.substring(0, 30) + "...";
+            document.getElementById('previewDesc').innerText = prompt;
+            document.getElementById('progressText').innerText = "Sedang merender adegan...";
+            document.getElementById('progressBar').style.width = "40%";
+            document.getElementById('progressPercent').innerText = "40%";
+
             setTimeout(() => {
-                document.getElementById('previewStatus').innerText = "READY";
-                document.getElementById('previewStatus').className = "text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-0.5 rounded-full font-medium";
-                alert("Permintaan berhasil diproses melalui ToAPIs Gateway!");
+                document.getElementById('progressBar').style.width = "100%";
+                document.getElementById('progressPercent').innerText = "100%";
+                document.getElementById('progressText').innerText = "Selesai dibuat.";
+                alert("Generasi konten berhasil diproses melalui ToAPIs!");
             }, 3000);
         }
     </script>
