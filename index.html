@@ -151,7 +151,7 @@
     <!-- KONTEN UTAMA -->
     <main class="flex-1 max-w-7xl w-full mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
         
-        <!-- KONTEN KIRI (Dinamis span-2 atau span-3) -->
+        <!-- KONTEN KIRI -->
         <div id="mainContentContainer" class="lg:col-span-2 space-y-6">
             
             <!-- STUDIO WORKSPACE -->
@@ -275,15 +275,20 @@
 
             <!-- ADMIN PANEL SECTION -->
             <div id="adminSection" class="hidden space-y-6 bg-[#131b2e]/90 backdrop-blur p-6 rounded-2xl border border-gray-800 shadow-xl">
-                <div class="flex justify-between items-center">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <h2 class="text-xl font-bold text-white">Admin Panel - Kelola Pengguna</h2>
-                    <button onclick="openAddUserModal()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow transition">➕ Tambah Pengguna</button>
+                    <div class="flex items-center space-x-3 w-full sm:w-auto">
+                        <!-- Tombol Pencarian User -->
+                        <input type="text" id="searchUserInput" oninput="renderAdminTable()" placeholder="🔍 Cari email/username..." class="bg-[#0b0f17] border border-gray-700 rounded-xl px-3.5 py-2 text-xs text-gray-200 focus:outline-none focus:border-purple-500 w-full sm:w-60">
+                        <button onclick="openAddUserModal()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow transition whitespace-nowrap">➕ Tambah Pengguna</button>
+                    </div>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs text-gray-300">
                         <thead class="border-b border-gray-700 text-gray-400 uppercase">
                             <tr>
                                 <th class="py-3">Email / Username</th>
+                                <th class="py-3">Password</th>
                                 <th class="py-3">Role</th>
                                 <th class="py-3">Kredit</th>
                                 <th class="py-3">Status</th>
@@ -297,7 +302,7 @@
 
         </div>
 
-        <!-- PREVIEW STUDIO (Hanya muncul di Studio & Gallery) -->
+        <!-- PREVIEW STUDIO -->
         <div id="previewColumn" class="bg-[#131b2e]/90 backdrop-blur border border-gray-800 rounded-2xl p-5 flex flex-col justify-between shadow-xl">
             <div>
                 <div class="flex justify-between items-center mb-3">
@@ -351,8 +356,8 @@
         let currentLoggedInEmail = 'admin@noxusvision.com';
 
         let usersList = [
-            { email: 'admin@noxusvision.com', role: 'Admin', credits: 'Unlimited', status: 'Active' },
-            { email: 'user@noxusvision.com', role: 'User', credits: 160, status: 'Active' }
+            { email: 'admin@noxusvision.com', password: 'admin123', role: 'Admin', credits: 'Unlimited', status: 'Active' },
+            { email: 'user@noxusvision.com', password: 'user123', role: 'User', credits: 160, status: 'Active' }
         ];
 
         function togglePasswordVisibility() {
@@ -372,13 +377,14 @@
         function handleLogin(e) {
             e.preventDefault();
             const userEmail = document.getElementById('loginUser').value.trim();
+            const userPass = document.getElementById('loginPass').value;
             currentLoggedInEmail = userEmail;
             document.getElementById('dropdownUserEmail').innerText = userEmail;
             document.getElementById('loginModal').classList.add('hidden');
             
             let found = usersList.find(u => u.email === userEmail);
             if(!found) {
-                usersList.push({ email: userEmail, role: userEmail.includes('admin') ? 'Admin' : 'User', credits: 160, status: 'Active' });
+                usersList.push({ email: userEmail, password: userPass, role: userEmail.includes('admin') ? 'Admin' : 'User', credits: 160, status: 'Active' });
             }
 
             if(userEmail.toLowerCase().includes('admin')) {
@@ -398,7 +404,7 @@
             const pass = document.getElementById('signupPass').value;
             if(!email || !pass) return;
 
-            usersList.push({ email: email, role: 'User', credits: 160, status: 'Active' });
+            usersList.push({ email: email, password: pass, role: 'User', credits: 160, status: 'Active' });
             alert('Pendaftaran berhasil! Silakan masuk dengan akun baru Anda.');
             document.getElementById('loginUser').value = email;
             renderAdminTable();
@@ -472,7 +478,6 @@
             const targetSec = document.getElementById(tab.toLowerCase() + 'Section');
             if(targetSec) targetSec.classList.remove('hidden');
 
-            // Atur visibilitas Preview Column & Grid span utama
             const mainContainer = document.getElementById('mainContentContainer');
             const previewCol = document.getElementById('previewColumn');
 
@@ -627,7 +632,6 @@
             const previewDesc = document.getElementById('previewDesc');
             previewDesc.innerText = prompt;
             
-            // Cek apakah prompt preview perlu tombol lihat lebih banyak
             const toggleBtn = document.getElementById('previewPromptToggle');
             if (prompt.length > 80) {
                 previewDesc.classList.add('line-clamp-2');
@@ -768,23 +772,30 @@
             }
         }
 
+        // --- ADMIN PANEL FUNCTIONS ---
         function renderAdminTable() {
             const tbody = document.getElementById('adminUserTableBody');
             tbody.innerHTML = '';
-            usersList.forEach((user, idx) => {
+            const searchKeyword = document.getElementById('searchUserInput').value.toLowerCase();
+            
+            const filteredUsers = usersList.filter(user => user.email.toLowerCase().includes(searchKeyword));
+
+            filteredUsers.forEach((user, idx) => {
+                const originalIdx = usersList.indexOf(user);
                 const isBlocked = user.status === 'Blocked';
                 const tr = document.createElement('tr');
                 tr.className = "border-b border-gray-800";
                 tr.innerHTML = `
                     <td class="py-3 font-medium text-white">${user.email}</td>
+                    <td><span class="bg-gray-800 text-gray-300 px-2 py-0.5 rounded font-mono">${user.password}</span></td>
                     <td>${user.role}</td>
                     <td><span class="bg-purple-950/60 text-purple-300 px-2 py-0.5 rounded border border-purple-500/30">${user.credits}</span></td>
                     <td><span class="px-2 py-0.5 rounded text-[10px] font-semibold ${isBlocked ? 'bg-red-500/20 text-red-400 border border-red-500/30' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'}">${user.status || 'Active'}</span></td>
                     <td class="space-x-1">
-                        <button onclick="adminEditUser(${idx})" class="text-indigo-400 hover:underline text-[11px]">Edit</button>
-                        <button onclick="adminAdjustCredit(${idx})" class="text-amber-400 hover:underline text-[11px]">Kredit (+/-)</button>
-                        <button onclick="adminToggleBlock(${idx})" class="text-orange-400 hover:underline text-[11px]">${isBlocked ? 'Unblock' : 'Block'}</button>
-                        <button onclick="adminDeleteUser(${idx})" class="text-red-400 hover:underline text-[11px]">Hapus</button>
+                        <button onclick="adminEditUser(${originalIdx})" class="text-indigo-400 hover:underline text-[11px]">Edit</button>
+                        <button onclick="adminAdjustCredit(${originalIdx})" class="text-amber-400 hover:underline text-[11px]">Kredit (+/-)</button>
+                        <button onclick="adminToggleBlock(${originalIdx})" class="text-orange-400 hover:underline text-[11px]">${isBlocked ? 'Unblock' : 'Block'}</button>
+                        <button onclick="adminDeleteUser(${originalIdx})" class="text-red-400 hover:underline text-[11px]">Hapus</button>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -794,8 +805,10 @@
         function openAddUserModal() {
             const email = prompt("Masukkan email/username user baru:");
             if(!email) return;
+            const password = prompt("Masukkan password user baru:", "123456");
+            if(!password) return;
             const credits = prompt("Masukkan jumlah kredit awal:", "160");
-            usersList.push({ email: email.trim(), role: 'User', credits: parseInt(credits) || 160, status: 'Active' });
+            usersList.push({ email: email.trim(), password: password.trim(), role: 'User', credits: parseInt(credits) || 160, status: 'Active' });
             renderAdminTable();
             alert("Pengguna baru berhasil ditambahkan!");
         }
@@ -803,20 +816,25 @@
         function adminEditUser(idx) {
             const u = usersList[idx];
             const newEmail = prompt("Edit Email / Username:", u.email);
-            if(newEmail) {
-                u.email = newEmail.trim();
-                renderAdminTable();
+            if(newEmail !== null) {
+                const newPass = prompt("Edit Password:", u.password);
+                if(newPass !== null) {
+                    u.email = newEmail.trim();
+                    u.password = newPass.trim();
+                    renderAdminTable();
+                }
             }
         }
 
         function adminAdjustCredit(idx) {
-            const u = usersList[idx];
-            const val = prompt(`Atur jumlah kredit untuk ${u.email}:`, "160");
+            const u = usersList.idx; // fixed syntax below
+            const uObj = usersList[idx];
+            const val = prompt(`Atur jumlah kredit untuk ${uObj.email} (Tambah/Kurang):`, "160");
             if(val !== null) {
-                if(u.credits === 'Unlimited') {
-                    u.credits = parseInt(val) || 0;
+                if(uObj.credits === 'Unlimited') {
+                    uObj.credits = parseInt(val) || 0;
                 } else {
-                    u.credits = Math.max(0, parseInt(u.credits) + (parseInt(val) || 0));
+                    uObj.credits = Math.max(0, parseInt(uObj.credits) + (parseInt(val) || 0));
                 }
                 renderAdminTable();
             }
