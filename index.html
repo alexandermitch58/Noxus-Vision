@@ -8,29 +8,47 @@
 </head>
 <body class="bg-[#0b0f17] text-gray-100 font-sans min-h-screen flex flex-col">
 
-    <!-- MODAL LOGIN -->
-    <div id="loginModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md px-4">
-        <div class="bg-[#131b2e] border border-purple-500/30 p-8 rounded-2xl w-full max-w-md shadow-2xl relative">
-            <div class="text-center mb-6">
-                <h2 class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">Noxus Vision Login</h2>
-                <p class="text-sm text-gray-400 mt-1">Masuk untuk mengakses Cloud AI Studio</p>
+    <!-- MODAL LOGIN DENGAN LATAR BELAKANG GAMBAR & TATA LETAK TIDAK MENUTUP TULISAN -->
+    <div id="loginModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md px-4 py-6 overflow-y-auto" style="background-image: url('Noxus Vision_ Neon AI Studio Gallery.png'); background-size: cover; background-position: center;">
+        
+        <!-- Lapisan Gelap Transparan agar Kontras -->
+        <div class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+
+        <!-- Kontainer Utama Login (Model Split / Berdampingan agar Logo di Gambar Tidak Tertutup) -->
+        <div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center max-w-5xl w-full mx-auto p-4">
+            
+            <!-- Sisi Kiri: Preview Branding / Tulisan Gambar Terlihat Jelas -->
+            <div class="hidden lg:flex flex-col items-center justify-center text-center space-y-4 p-6">
+                <div class="w-24 h-24 bg-gradient-to-tr from-purple-600 to-indigo-600 text-white font-bold rounded-3xl flex items-center justify-center text-3xl shadow-2xl shadow-purple-600/50 border border-purple-400/30">NV</div>
+                <h1 class="text-3xl font-extrabold tracking-wider bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400 bg-clip-text text-transparent">NOXUS VISION</h1>
+                <p class="text-sm text-gray-300 max-w-sm">Cloud AI Studio profesional untuk merender video sinematik dan karya visual tingkat lanjut.</p>
             </div>
-            <form onsubmit="handleLogin(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1">Email / Username</label>
-                    <input type="text" id="loginUser" required class="w-full bg-[#0b0f17] border border-gray-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-purple-500" placeholder="admin@noxusvision.com">
+
+            <!-- Sisi Kanan: Kotak Form Login -->
+            <div class="bg-[#131b2e]/90 border border-purple-500/40 p-8 rounded-3xl w-full max-w-md mx-auto shadow-2xl backdrop-blur-md">
+                <div class="text-center mb-6">
+                    <h2 class="text-2xl font-bold text-white">Selamat Datang</h2>
+                    <p class="text-xs text-gray-400 mt-1">Silakan masuk untuk mulai membuat karya</p>
                 </div>
-                <div>
-                    <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1">Password</label>
-                    <div class="relative">
-                        <input type="password" id="loginPass" required class="w-full bg-[#0b0f17] border border-gray-700 rounded-lg px-4 py-2.5 pr-10 text-sm focus:outline-none focus:border-purple-500" placeholder="••••••••">
-                        <button type="button" onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-xs text-gray-400 hover:text-white">👁️</button>
+
+                <form onsubmit="handleLogin(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1">Email / Username</label>
+                        <input type="text" id="loginUser" required class="w-full bg-[#0b0f17] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-500 text-gray-200" placeholder="admin@noxusvision.com">
                     </div>
-                </div>
-                <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-medium py-2.5 rounded-lg transition shadow-lg shadow-purple-600/30">
-                    Masuk ke Studio
-                </button>
-            </form>
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1">Password</label>
+                        <div class="relative">
+                            <input type="password" id="loginPass" required class="w-full bg-[#0b0f17] border border-gray-700 rounded-xl px-4 py-3 pr-10 text-sm focus:outline-none focus:border-purple-500 text-gray-200" placeholder="••••••••">
+                            <button type="button" onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-xs text-gray-400 hover:text-white">👁️</button>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 hover:opacity-95 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-purple-600/30">
+                        Masuk ke Studio
+                    </button>
+                </form>
+            </div>
+
         </div>
     </div>
 
@@ -179,7 +197,7 @@
             </button>
         </div>
 
-        <!-- BAGIAN GALLERY SECTION (DIPISAH & DILENGKAPI TOMBOL HAPUS) -->
+        <!-- BAGIAN GALLERY SECTION -->
         <div id="gallerySection" class="lg:col-span-2 hidden space-y-6">
             <h2 class="text-xl font-bold text-white tracking-wide">Galeri Anda</h2>
 
@@ -193,10 +211,9 @@
                 </div>
             </div>
 
-            <!-- PEMBATAS -->
             <div class="border-t border-gray-800 my-6"></div>
 
-            <!-- KATEGORI 2: FOTO REFERENSI YANG DIUNGGAH -->
+            <!-- KATEGORI 2: FOTO REFERENSI -->
             <div class="space-y-3">
                 <div class="flex items-center space-x-2 border-b border-gray-800 pb-2">
                     <span class="text-sm font-semibold text-indigo-400">📁 Foto Referensi Tersimpan</span>
@@ -252,14 +269,12 @@
                     <img id="resultImage" class="w-full h-full object-cover hidden" alt="AI Image Result">
                 </div>
 
-                <!-- Keterangan Detail di Bawah Preview -->
                 <div class="mt-4 space-y-2">
                     <h4 id="previewTitle" class="font-bold text-white text-sm">Belum ada judul adegan</h4>
                     <p id="previewDesc" class="text-xs text-gray-400">Deskripsi prompt atau detail adegan akan muncul di sini.</p>
                     <div id="previewMeta" class="text-[11px] text-purple-400 font-medium">15 detik • 1080p • 16:9</div>
                 </div>
 
-                <!-- Status Progress Bar -->
                 <div class="mt-4 pt-3 border-t border-gray-800/60 space-y-1.5">
                     <div class="flex justify-between text-xs text-gray-400">
                         <span id="progressText">Siap dibuat.</span>
@@ -271,7 +286,6 @@
                 </div>
             </div>
 
-            <!-- Tombol Download Hasil -->
             <div class="mt-6 pt-4 border-t border-gray-800">
                 <button id="downloadBtn" onclick="downloadResult()" disabled class="w-full bg-gray-800 text-gray-500 font-medium py-2.5 rounded-xl transition cursor-not-allowed">
                     📥 Download Hasil (.MP4 / .PNG)
@@ -284,8 +298,8 @@
     <!-- SCRIPT JAVASCRIPT -->
     <script>
         let uploadedImages = [];
-        let allGlobalGallery = []; // Menyimpan riwayat foto
-        let renderedVideoGallery = []; // Menyimpan riwayat video hasil render
+        let allGlobalGallery = [];
+        let renderedVideoGallery = [];
         let selectedDuration = '15s';
         let selectedResolution = '1080p';
         let selectedAspect = '16:9';
@@ -504,14 +518,12 @@
                     imgResult.classList.remove('hidden');
                     document.getElementById('videoPlaceholder').classList.add('hidden');
                     
-                    // Simpan ke galeri render
                     renderedVideoGallery.push({ type: 'image', url: imgResult.src, title: prompt });
                 } else {
                     const vidResult = document.getElementById('resultVideo');
                     vidResult.classList.remove('hidden');
                     document.getElementById('videoPlaceholder').classList.add('hidden');
                     
-                    // Simpan ke galeri render
                     renderedVideoGallery.push({ type: 'video', title: prompt, meta: `${selectedDuration} • ${selectedResolution}` });
                 }
 
@@ -520,7 +532,6 @@
         }
 
         function renderGalleryViews() {
-            // Render Video Galeri
             const vidGrid = document.getElementById('videoGalleryGrid');
             vidGrid.innerHTML = '';
             if(renderedVideoGallery.length === 0) {
@@ -539,7 +550,6 @@
                 });
             }
 
-            // Render Foto Referensi Galeri
             const photoGrid = document.getElementById('photoGalleryGrid');
             photoGrid.innerHTML = '';
             if(allGlobalGallery.length === 0) {
