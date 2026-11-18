@@ -8,37 +8,30 @@
 </head>
 <body class="bg-[#0b0f17] text-gray-100 font-sans min-h-screen flex flex-col" style="background-image: linear-gradient(to bottom, rgba(11,15,23,0.6), rgba(11,15,23,0.8)), url('bg.png'); background-size: cover; background-position: center; background-attachment: fixed;">
 
-    <!-- MODAL LOGIN DENGAN BACKGROUND GAMBAR -->
-    <div id="loginModal" class="fixed inset-0 z-50 flex items-center justify-center px-4 py-6 overflow-y-auto bg-black/60 backdrop-blur-sm" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.5)), url('bg.png'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+    <!-- MODAL LOGIN: KOTAK DI TENGAH, TRANSPARAN, TANPA KOTAK KIRI -->
+    <div id="loginModal" class="fixed inset-0 z-50 flex items-center justify-center px-4 py-6 overflow-y-auto bg-black/50 backdrop-blur-sm" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url('bg.png'); background-size: cover; background-position: center; background-repeat: no-repeat;">
         
-        <div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center max-w-6xl w-full mx-auto p-4">
+        <div class="relative z-10 max-w-md w-full mx-auto p-4 flex flex-col items-center">
             
-            <!-- Sisi Kiri: Branding Noxus Vision -->
-            <div class="hidden lg:flex flex-col items-center justify-center text-center space-y-4 p-6 bg-black/40 rounded-3xl backdrop-blur-md border border-white/10 shadow-2xl">
-                <div class="w-24 h-24 bg-gradient-to-tr from-purple-600 to-indigo-600 text-white font-bold rounded-3xl flex items-center justify-center text-3xl shadow-2xl shadow-purple-600/50 border border-purple-400/30">NV</div>
-                <h1 class="text-3xl font-extrabold tracking-wider bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400 bg-clip-text text-transparent">NOXUS VISION</h1>
-                <p class="text-sm text-gray-200 max-w-sm drop-shadow">Cloud AI Studio profesional untuk merender video sinematik dan karya visual tingkat lanjut.</p>
-            </div>
-
-            <!-- Sisi Kanan: Kotak Form Login -->
-            <div class="bg-[#131b2e]/90 border border-purple-500/40 p-8 rounded-3xl w-full max-w-md mx-auto shadow-2xl backdrop-blur-md">
+            <!-- Kotak Form Login Transparan -->
+            <div class="bg-[#131b2e]/50 border border-purple-500/30 p-8 rounded-3xl w-full shadow-2xl backdrop-blur-md">
                 
                 <!-- Tampilan Login -->
                 <div id="formLoginView">
                     <div class="text-center mb-6">
                         <h2 class="text-2xl font-bold text-white">Selamat Datang</h2>
-                        <p class="text-xs text-gray-400 mt-1">Silakan masuk untuk mulai membuat karya</p>
+                        <p class="text-xs text-gray-300 mt-1">Silakan masuk untuk mulai membuat karya</p>
                     </div>
 
                     <form onsubmit="handleLogin(event)" class="space-y-4">
                         <div>
-                            <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1">Email / Username</label>
-                            <input type="text" id="loginUser" required value="admin@noxusvision.com" class="w-full bg-[#0b0f17] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-500 text-gray-200" placeholder="admin@noxusvision.com">
+                            <label class="block text-xs uppercase tracking-wider text-gray-300 mb-1">Email / Username</label>
+                            <input type="text" id="loginUser" required value="admin@noxusvision.com" class="w-full bg-[#0b0f17]/70 border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-500 text-gray-200" placeholder="admin@noxusvision.com">
                         </div>
                         <div>
-                            <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1">Password</label>
+                            <label class="block text-xs uppercase tracking-wider text-gray-300 mb-1">Password</label>
                             <div class="relative">
-                                <input type="password" id="loginPass" required value="admin123" class="w-full bg-[#0b0f17] border border-gray-700 rounded-xl px-4 py-3 pr-10 text-sm focus:outline-none focus:border-purple-500 text-gray-200" placeholder="••••••••">
+                                <input type="password" id="loginPass" required value="admin123" class="w-full bg-[#0b0f17]/70 border border-gray-700 rounded-xl px-4 py-3 pr-10 text-sm focus:outline-none focus:border-purple-500 text-gray-200" placeholder="••••••••">
                                 <button type="button" onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-xs text-gray-400 hover:text-white">👁️</button>
                             </div>
                         </div>
@@ -47,7 +40,7 @@
                         </button>
                     </form>
 
-                    <div class="flex justify-between items-center mt-5 pt-4 border-t border-gray-800 text-xs text-gray-400">
+                    <div class="flex justify-between items-center mt-5 pt-4 border-t border-gray-700/50 text-xs text-gray-300">
                         <button type="button" onclick="switchAuthView('reset')" class="hover:text-purple-400 transition">Lupa Password?</button>
                         <span>Belum punya akun? <button type="button" onclick="switchAuthView('signup')" class="text-purple-400 font-semibold hover:underline">Sign Up</button></span>
                     </div>
@@ -57,22 +50,22 @@
                 <div id="formSignupView" class="hidden">
                     <div class="text-center mb-6">
                         <h2 class="text-2xl font-bold text-white">Daftar Akun</h2>
-                        <p class="text-xs text-gray-400 mt-1">Buat akun Noxus Vision baru</p>
+                        <p class="text-xs text-gray-300 mt-1">Buat akun Noxus Vision baru</p>
                     </div>
                     <form onsubmit="handleSignup(event)" class="space-y-4">
                         <div>
-                            <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1">Email</label>
-                            <input type="email" id="signupEmail" required class="w-full bg-[#0b0f17] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-500 text-gray-200" placeholder="user@noxusvision.com">
+                            <label class="block text-xs uppercase tracking-wider text-gray-300 mb-1">Email</label>
+                            <input type="email" id="signupEmail" required class="w-full bg-[#0b0f17]/70 border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-500 text-gray-200" placeholder="user@noxusvision.com">
                         </div>
                         <div>
-                            <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1">Password</label>
-                            <input type="password" id="signupPass" required class="w-full bg-[#0b0f17] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-500 text-gray-200" placeholder="••••••••">
+                            <label class="block text-xs uppercase tracking-wider text-gray-300 mb-1">Password</label>
+                            <input type="password" id="signupPass" required class="w-full bg-[#0b0f17]/70 border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-500 text-gray-200" placeholder="••••••••">
                         </div>
                         <button type="submit" class="w-full bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 text-white font-bold py-3 rounded-xl transition">
                             Daftar Sekarang
                         </button>
                     </form>
-                    <div class="text-center mt-5 pt-4 border-t border-gray-800 text-xs text-gray-400">
+                    <div class="text-center mt-5 pt-4 border-t border-gray-700/50 text-xs text-gray-300">
                         Sudah punya akun? <button type="button" onclick="switchAuthView('login')" class="text-purple-400 font-semibold hover:underline">Kembali ke Login</button>
                     </div>
                 </div>
@@ -81,18 +74,18 @@
                 <div id="formResetView" class="hidden">
                     <div class="text-center mb-6">
                         <h2 class="text-2xl font-bold text-white">Reset Password</h2>
-                        <p class="text-xs text-gray-400 mt-1">Masukkan email akun Anda</p>
+                        <p class="text-xs text-gray-300 mt-1">Masukkan email akun Anda</p>
                     </div>
                     <form onsubmit="handleReset(event)" class="space-y-4">
                         <div>
-                            <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1">Email</label>
-                            <input type="email" required class="w-full bg-[#0b0f17] border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-500 text-gray-200" placeholder="user@noxusvision.com">
+                            <label class="block text-xs uppercase tracking-wider text-gray-300 mb-1">Email</label>
+                            <input type="email" required class="w-full bg-[#0b0f17]/70 border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-500 text-gray-200" placeholder="user@noxusvision.com">
                         </div>
                         <button type="submit" class="w-full bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 text-white font-bold py-3 rounded-xl transition">
                             Kirim Link Reset
                         </button>
                     </form>
-                    <div class="text-center mt-5 pt-4 border-t border-gray-800 text-xs text-gray-400">
+                    <div class="text-center mt-5 pt-4 border-t border-gray-700/50 text-xs text-gray-300">
                         <button type="button" onclick="switchAuthView('login')" class="text-purple-400 font-semibold hover:underline">Kembali ke Login</button>
                     </div>
                 </div>
